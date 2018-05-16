@@ -1,0 +1,25 @@
+<div class="ui form center">
+  <%= form_with url: articles_path, method: :get, class: "three fields" do |f| %>
+
+    <div class="field">
+      <div class="column ui icon input">
+        <%= f.text_field :q, placeholder: "Query" %>
+      </div>
+    </div>
+
+    <div class="field">
+      <%= render 'tags/tag_dropdown', multiple: true %>
+    </div>
+
+    <div class="field">
+      <%= render 'users/dropdown' %>
+    </div>
+
+    <div class="field">
+      <button class="ui blue button" style="width: 100%" onclick="form.submit()">
+        <i class="search icon"></i>
+        Search
+      </button>
+    </div>
+  <% end %>
+</div>

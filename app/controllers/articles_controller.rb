@@ -1,77 +1,73 @@
+require Rails.root.join 'lib/assets/permission'
+
 class ArticlesController < ApplicationController
-  before_action :set_article, only: [:show, :edit, :update, :destroy]
+  include Permission
+  before_action :set_and_authorize, only: [:edit, :update, :destroy]
+  before_action :set_article, only: :show
 
-  # GET /articles
-  # GET /articles.json
   def index
-    @articles = Article.all
+    @articles = Article.search params[:q], tags: find_tags, author: find_author
   end
 
-  # GET /articles/1
-  # GET /articles/1.json
-  def show
-  end
-
-  # GET /articles/new
   def new
     @article = Article.new
   end
 
-  # GET /articles/1/edit
-  def edit
-  end
-
-  # POST /articles
-  # POST /articles.json
   def create
-    @article = Article.new(article_params)
+    @article = Article.new article_params.merge(author: current_user)
 
     respond_to do |format|
       if @article.save
-        format.html { redirect_to @article }
-        format.json { render :show, status: :created, location: @article }
-        toggle_flash(IS_SUCCESS, "Success!", "Project was successfully created.")
+        format.html {redirect_to @article, notice: 'Article was successfully created.'}
+        format.json {render :show, status: :created, location: @article}
       else
-        format.html { render :new }
-        format.json { render json: @article.errors, status: :unprocessable_entity }
+        flash.now[:red] = @article.errors
+        format.html {render :new}
+        format.json {render json: @article.errors, status: :unprocessable_entity}
       end
     end
   end
 
-  # PATCH/PUT /articles/1
-  # PATCH/PUT /articles/1.json
   def update
     respond_to do |format|
       if @article.update(article_params)
-        format.html { redirect_to @article}
+        format.html { redirect_to @article, flash: {green: 'Article was successfully updated.'}}
         format.json { render :show, status: :ok, location: @article }
-        toggle_flash(IS_SUCCESS, "Success!", "Article was successfully updated.")
       else
+        flash.now[:red] = @article.errors
         format.html { render :edit }
         format.json { render json: @article.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # DELETE /articles/1
-  # DELETE /articles/1.json
   def destroy
     @article.destroy
     respond_to do |format|
-      format.html { redirect_to articles_url}
+      format.html { redirect_to articles_url, notice: 'Article was successfully destroyed.' }
       format.json { head :no_content }
-      toggle_flash(IS_SUCCESS, "Success!", "Project was successfully destroyed.")
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_article
-      @article = Article.find(params[:id])
-    end
+  def find_tags
+    return nil if params[:tags].blank?
+    params[:tags].split(',').map {|i| klass.find i}
+  end
+  
+  def find_author
+    return nil if params[:author].blank?
+    User.find params[:author]
+  end
+  
+  def set_article
+    @article = Article.find params[:id]
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def article_params
-      params.require(:article).permit(:title, :description)
-    end
+  def article_params
+    hash = params.require(:article).permit(:title, :body, :tldr, :tldr_image)
+    return hash unless params.key? :tags
+    hash[:tags] = params[:tags].split(', ').map {|id| Tag.find id}
+    hash
+  end
 end

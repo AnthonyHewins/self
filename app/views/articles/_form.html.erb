@@ -1,15 +1,51 @@
-<%= form_with(model: article, local: true) do |form| %>
-  <%= render "shared/errors", obj: @article %>
-
+<%= form_with(model: article, local: true, id: uid(article), class: "ui form") do |form| %>
   <div class="field">
-    <%= form.label :title, class: "label" %>
-    <%= form.text_field :title, id: :article_title, class: "input" %>
+    <%= form.label :title %>
+    <%= form.text_field :title, placeholder: "3-256 characters" %>
   </div>
 
   <div class="field">
-    <%= form.label :description, class: "label" %>
-    <%= form.text_area :description, id: :article_description, class: "textarea" %>
+    <%= form.label :tags, "Tag", class: "label" %>
+    <%= render 'tags/tag_dropdown' %>
   </div>
 
-  <%= form.submit class: "button is-link" %>
+  <div class="field">
+    <%= form.label :tldr, "TL;DR", class: "label" %>    
+    <%= form.text_area :tldr, id: 'tldr',
+        class: "wysiwig",
+        placeholder: "Short description in 160 characters or less (not required)" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tldr_image, "Image for TL;DR (not required)" %>
+    <%= form.file_field :tldr_image, id: 'tldr-image', class: "wysiwig" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :body, class: "label" %>
+    <div class="ui two column grid">
+      <div class="column">
+        <%= form.text_area :body, class: "wysiwig katex-input", "data-target" => "#katex-output", id: 'body' %>
+      </div>
+      <div class="column" id="katex-output">
+
+        <% if article.body.blank? %>
+          Start typing to view the raw HTML you're generating.
+          <br>
+          If you use <strong>$$</strong> as delimiters, you can write LaTeX expressions.
+          <br>
+          E.g. <i>$$ a^2+b^2=c^2 $$</i> yields the Pythagorean Theorem.
+        <% else %>
+          <%= parse_katex article.body %>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= form.submit class: "ui primary button", id: "submit-article" %>
+  </div>
 <% end %>
+
+<%= javascript_pack_tag "import_ckeditor" %>

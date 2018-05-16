@@ -1,0 +1,17 @@
+-1. Implement turbolinks events instead of DOM events
+0. UI todo list
+        y. Font
+	z. Homepage
+	a. Footer needs work and content
+	c. Login page probably needs a touch of custom CSS, and need to see how it looks in mobile
+	d. Images need an upper bound, they're massive in certain situations
+1. Tag implementation
+2. Free Js framework? Going to need components, not html
+
+
+
+Future concerns include:
+	1. ads
+	2. Legal
+	3. Policies with data
+	4. Contact information

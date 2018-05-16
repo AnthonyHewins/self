@@ -12,4 +12,10 @@
 //
 //= require rails-ujs
 //= require turbolinks
-//= require navbar
+//= require jquery3
+//= require semantic-ui
+
+// Initialize setup that will need to be on every page
+$(window).on('load', function() {
+    $('.ui.dropdown').dropdown();
+})

@@ -1,0 +1,29 @@
+<% if local_assigns.key? :tags %>
+  <% tags = local_assigns[:tags].pluck(:id, :name, :css) %>
+<% else %>
+  <% tags = Tag.pluck(:id, :name, :css) %>
+<% end %>
+
+<% multiple = local_assigns[:multiple] %>
+<% dropdown_class = "ui fluid #{'multiple' if multiple} search selection dropdown" %>
+<% default_text = "Tag#{'s' if multiple}" %>
+
+<%# =================================================================== %>
+
+<div class="<%= dropdown_class %>">
+  <input name="tags" type="hidden">
+
+  <i class="dropdown icon"></i>
+  <%= content_tag :div, default_text, class: "default text" %>
+
+  <div class="menu">
+
+    <% tags.each do |id, name, css| %>
+      <div class="item" data-value="<%= id %>">
+        <i class="<%= css %>"></i>
+        <%= name.capitalize %>
+      </div>
+    <% end %>
+
+  </div>
+</div>

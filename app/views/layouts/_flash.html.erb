@@ -1,0 +1,14 @@
+<% flash.each do |type, message| %>
+  <div class="ui <%= type %> message" id="flash">
+    <% if message.instance_of? ActiveModel::Errors %>
+      Error:
+      <ul>
+        <% message.full_messages.each do |message| %>
+          <%= content_tag :li, message %>
+        <% end %>
+      </ul>
+    <% else %>
+      <%= message %>
+    <% end %>
+  </div>
+<% end %>

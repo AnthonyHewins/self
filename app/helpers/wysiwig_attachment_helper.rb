@@ -1,0 +1,2 @@
+module WysiwigAttachmentHelper
+end

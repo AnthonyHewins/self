@@ -1,13 +1,7 @@
-class HomeController < ApplicationController
-
-  skip_before_action :authenticate_user!
-
+class StaticController < ApplicationController
   def index
   end
 
-  def register
-  end
-
-  def login
+  def about
   end
 end

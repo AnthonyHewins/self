@@ -5,23 +5,42 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem "bulma-rails", "~> 0.7.1"
-gem 'rails', '~> 5.1.6'
-gem 'sqlite3'
+gem 'rails', '~> 5.2.1'
+
+# Server
 gem 'puma', '~> 3.7'
-gem 'sass-rails', '~> 5.0'
+
+# DB
+gem 'pg'
+
+# Controller
+gem 'bcrypt', require: 'bcrypt'
+
+# Assets
 gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.2'
-gem 'turbolinks', '~> 5'
+gem 'webpacker', git: "https://github.com/rails/webpacker.git"
+
+# Views
+gem 'semantic-ui-sass'
+gem 'gravtastic'
+gem 'turbolinks', '~> 5' # Disabled to prevent JS not reloading for Vue
 gem 'jbuilder', '~> 2.5'
-gem 'devise'
 gem 'jquery-rails'
+gem 'katex'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+end
+
+group :test do
   gem 'capybara', '~> 2.13'
   gem 'selenium-webdriver'
   gem 'rspec-rails'
+  gem 'factory_bot'
+  gem 'ffaker'
+  gem 'shoulda-matchers'
+  gem 'rails-controller-testing'
+  gem 'database_cleaner'
 end
 
 group :development do

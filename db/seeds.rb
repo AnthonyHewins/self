@@ -1,14 +1,11 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+username = "aahewins"
+default_pw = "a!!!!!"
+User.create! handle: "aahewins", email: "aahewins@protonmail.com", password: default_pw
+puts "Creating aahewins with default pw #{default_pw}, be sure to change..."
 
-Project.create(
-    name:'Auto binance',
-    url:'https://github.com/AnthonyHewins/auto-binance',
-    description:'Binance trader that does nothing except keep your assets safe by watching over them for catastrophe.',
-    image: 'binance.jpg'
-)
+ActiveRecord::Base.logger = Logger.new STDOUT
+
+Tag.create!(name: "Mathematics",      css: "blue calculator icon")
+Tag.create!(name: "Computer Science", css: "microchip icon")
+Tag.create!(name: "Conspiracy",       css: "red eye icon")
+Tag.create!(name: "Shitposts",        css: "red thumbs down outline icon")

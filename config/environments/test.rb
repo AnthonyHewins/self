@@ -32,6 +32,7 @@ Rails.application.configure do
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
+  config.action_mailer.default_url_options = {host: '127.0.0.1'}
   config.action_mailer.delivery_method = :test
 
   # Print deprecation notices to the stderr.
@@ -39,4 +40,7 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Store everything temporarily on test
+  config.active_storage.service = :test
 end
