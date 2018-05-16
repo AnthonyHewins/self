@@ -1,0 +1,26 @@
+<table class="table">
+  <thead>
+  <tr>
+    <th>Title</th>
+    <th>Description</th>
+    <th colspan="3"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @articles.each do |article| %>
+    <% trailing_ellipses = article.description.length > 50 ? "..." : "" %>
+    <tr>
+      <td><%= article.title %></td>
+      <td><%= article.description[0, 50].chop %><%= trailing_ellipses %></td>
+      <td><%= link_to 'Show', article %></td>
+      <td><%= link_to 'Edit', edit_article_path(article) %></td>
+      <td><%= link_to 'Destroy', article, method: :delete, data: {confirm: 'Are you sure?'} %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Article', new_article_path %>

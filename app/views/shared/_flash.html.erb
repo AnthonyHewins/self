@@ -1,0 +1,10 @@
+<% if !flash["header"].nil? %>
+  <article class="message <%= flash["style"] %>">
+    <div class="message-header">
+      <h2><%= flash["header"] %></h2>
+    </div>
+    <div class="message-body">
+      <%= flash["message"] %>
+    </div>
+  </article>
+<% end %>
