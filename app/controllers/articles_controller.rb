@@ -52,7 +52,7 @@ class ArticlesController < ApplicationController
   private
   def find_tags
     return nil if params[:tags].blank?
-    params[:tags].split(',').map {|i| klass.find i}
+    params[:tags].split(',').map {|i| Tag.find i}
   end
   
   def find_author

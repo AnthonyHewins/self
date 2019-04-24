@@ -11,11 +11,10 @@
 // about supported directives.
 //
 //= require rails-ujs
-//= require turbolinks
 //= require jquery3
 //= require semantic-ui
 
 // Initialize setup that will need to be on every page
-$(window).on('load', function() {
-    $('.ui.dropdown').dropdown();
+document.addEventListener("DOMContentLoaded", function() {
+    $('.ui.dropdown').dropdown()
 })

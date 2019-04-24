@@ -1,7 +1,14 @@
 <%= form_with(model: article, local: true, id: uid(article), class: "ui form") do |form| %>
   <div class="field">
     <%= form.label :title %>
-    <%= form.text_field :title, placeholder: "3-256 characters" %>
+    <div class="ui two column grid">
+      <div class="column">
+        <%= form.text_area :title, class: "wysiwig katex-input", "data-target" => "#katex-output-title" %>
+      </div>
+      <div class="column" id="katex-output-title">
+        <%= render 'articles/katex_target', text: article.title %>
+      </div>
+    </div>
   </div>
 
   <div class="field">
@@ -11,34 +18,29 @@
 
   <div class="field">
     <%= form.label :tldr, "TL;DR", class: "label" %>    
-    <%= form.text_area :tldr, id: 'tldr',
-        class: "wysiwig",
-        placeholder: "Short description in 160 characters or less (not required)" %>
+    <div class="ui two column grid">
+      <div class="column">
+        <%= form.text_area :tldr, id: 'tldr', class: "wysiwig katex-input", "data-target" => "#katex-output-tldr" %>
+      </div>
+      <div class="column" id="katex-output-tldr">
+        <%= render 'articles/katex_target', id: "katex-output-tldr", text: article.tldr %>
+      </div>
+    </div>
   </div>
 
   <div class="field">
     <%= form.label :tldr_image, "Image for TL;DR (not required)" %>
-    <%= form.file_field :tldr_image, id: 'tldr-image', class: "wysiwig" %>
+    <%= form.file_field :tldr_image, id: 'tldr-image' %>
   </div>
 
   <div class="field">
     <%= form.label :body, class: "label" %>
     <div class="ui two column grid">
       <div class="column">
-        <%= form.text_area :body, class: "wysiwig katex-input", "data-target" => "#katex-output", id: 'body' %>
+        <%= form.text_area :body, class: "wysiwig katex-input", "data-target" => "#katex-output-body", id: 'body' %>
       </div>
-      <div class="column" id="katex-output">
-
-        <% if article.body.blank? %>
-          Start typing to view the raw HTML you're generating.
-          <br>
-          If you use <strong>$$</strong> as delimiters, you can write LaTeX expressions.
-          <br>
-          E.g. <i>$$ a^2+b^2=c^2 $$</i> yields the Pythagorean Theorem.
-        <% else %>
-          <%= parse_katex article.body %>
-        <% end %>
-
+      <div class="column" id="katex-output-body">
+        <%= render 'articles/katex_target', id: "", text: article.body %>
       </div>
     </div>
   </div>

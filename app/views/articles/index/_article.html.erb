@@ -1,13 +1,13 @@
 <% img_link = article.tldr_image.attachment || "empty_set.png" %>
 
-<a class="item" href="<%= article_path(article) %>" id="<%= uid(article) %>">
+<div class="item" id="<%= uid(article) %>">
 
   <div class="ui tiny image">
     <%= image_tag img_link %>
   </div>
 
   <div class="content">
-    <%= content_tag :h1, article.title, class: "header" %>
+    <%= link_to parse_katex(article.title), article, class: "header" %>
 
     <div class="meta">
       <%= author_label article %>
@@ -18,7 +18,7 @@
     </div>
 
     <div class="description">
-      <%= content_tag :span, article.tldr %>
+      <%= parse_katex article.tldr %>
     </div>
   </div>
-</a>
+</div>

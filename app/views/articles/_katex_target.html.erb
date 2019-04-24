@@ -1,0 +1,9 @@
+<% if text.blank? %>
+  Start typing to view the raw HTML you're generating.
+  <br>
+  If you use <strong>$$</strong> as delimiters, you can write LaTeX expressions.
+  <br>
+  E.g. <i>$$ a^2+b^2=c^2 $$</i> yields the Pythagorean Theorem.
+<% else %>
+  <%= parse_katex text %>
+<% end %>

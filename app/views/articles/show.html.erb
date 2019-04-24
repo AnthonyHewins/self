@@ -1,12 +1,18 @@
 <h1 class="ui header">
-  <%= @article.title %>
-  <%= author_label @article %>
+  <%= parse_katex @article.title %>
 </h1>
 
 <div class="field">
-  <% @article.tags.each do |article_tag| %>
-    <%= render "tags/tag", tag: article_tag %>
-  <% end %>
+  <%= author_label @article %>
+</div>
+
+<div class="ui message">
+  <div class="header">Tags</div>
+  <p>
+    <% @article.tags.each do |article_tag| %>
+      <%= render "tags/tag", tag: article_tag %>
+    <% end %>
+  </p>
 </div>
 
 <% if current_user&.has_permission? @article %>
@@ -21,8 +27,8 @@
 
 <div class="ui segment">
   <h1>tl;dr</h1>
-  <%= @article.tldr.html_safe %>
-  <%= image_tag(@article.tldr_image.attachment) unless @article.tldr_image.attachment.nil?%>
+  <%= parse_katex @article.tldr %>
+  <%= image_tag(@article.tldr_image.attachment) unless @article.tldr_image.attachment.nil? %>
 </div>
 
 <%= parse_katex @article.body %>

@@ -1,6 +1,6 @@
 class Article < PermissionModel
-  TITLE_MIN = 3
-  TITLE_MAX = 256
+  TITLE_MIN = 10
+  TITLE_MAX = 1000
 
   TLDR_MAX = 1500
 
@@ -13,7 +13,7 @@ class Article < PermissionModel
 
   validates :tldr, length: {maximum: TLDR_MAX}
 
-  validates :body, presence: true, length: {minimum: 128}
+  validates :body, presence: true, length: {minimum: BODY_MIN}
 
   has_one_attached :tldr_image
 
@@ -41,7 +41,7 @@ class Article < PermissionModel
     when Tag
       query_chain.where 'tags.id = ?', tags.id
     when String
-      tags.blank? ? query_chain : query_chain.where('tags.name = ?', tags.downcase)
+      tags.empty? ? query_chain : query_chain.where('tags.name = ?', tags.downcase)
     when NilClass
       query_chain
     else
@@ -54,7 +54,7 @@ class Article < PermissionModel
     when User
       query_chain.where author: author
     when String
-      author.blank? ? query_chain : query_chain.where('users.handle like :author', author: author)
+      author.empty? ? query_chain : query_chain.where('users.handle like :author', author: author)
     when NilClass
       query_chain
     else

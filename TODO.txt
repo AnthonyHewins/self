@@ -1,11 +1,11 @@
--1. Implement turbolinks events instead of DOM events
 0. UI todo list
         y. Font
 	z. Homepage
 	a. Footer needs work and content
 	c. Login page probably needs a touch of custom CSS, and need to see how it looks in mobile
 	d. Images need an upper bound, they're massive in certain situations
-1. Tag implementation
+1. Create a Katex renderer for just a textarea/text field on titles and tldrs; should increase the performance of everything
+   and allow for much greater ease in data cleansing
 2. Free Js framework? Going to need components, not html
 
 
