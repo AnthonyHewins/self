@@ -3,7 +3,7 @@
     <%= form.label :title %>
     <div class="ui two column grid">
       <div class="column">
-        <%= form.text_area :title, class: "wysiwig katex-input", "data-target" => "#katex-output-title" %>
+        <%= form.text_area :title, class: "katex-input", "data-target" => "#katex-output-title" %>
       </div>
       <div class="column" id="katex-output-title">
         <%= render 'articles/katex_target', text: article.title %>
@@ -20,7 +20,7 @@
     <%= form.label :tldr, "TL;DR", class: "label" %>    
     <div class="ui two column grid">
       <div class="column">
-        <%= form.text_area :tldr, id: 'tldr', class: "wysiwig katex-input", "data-target" => "#katex-output-tldr" %>
+        <%= form.text_area :tldr, id: 'tldr', class: "katex-input", "data-target" => "#katex-output-tldr" %>
       </div>
       <div class="column" id="katex-output-tldr">
         <%= render 'articles/katex_target', id: "katex-output-tldr", text: article.tldr %>

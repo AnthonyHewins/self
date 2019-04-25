@@ -49,12 +49,3 @@
 .black {
     color: #000000;
 }
-
-@font-face {
-    font-family: 'Flamenco-Regular';
-    src: url('fonts/flamenco/Flamenco-Regular.ttf');
-}
-
-.fancy {
-    font-family: "Flamenco-Regular";
-}
