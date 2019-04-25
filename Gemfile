@@ -29,7 +29,7 @@ gem 'jquery-rails'
 gem 'katex'
 
 group :development, :test do
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'byebug'
 end
 
 group :test do
