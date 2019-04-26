@@ -1,8 +1,7 @@
 0. UI todo list
+        z. logo
 	a. Footer needs work and content
-	d. Images need an upper bound, they're massive in certain situations
         y. Font
-1. Got the parser to work on non-wysiwig fields, now impose more restrictive data cleansing rules?
 
 Future concerns include:
 	1. ads

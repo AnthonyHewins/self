@@ -9,8 +9,12 @@
 <div class="ui message">
   <div class="header">Tags</div>
   <p>
-    <% @article.tags.each do |article_tag| %>
-      <%= render "tags/tag", tag: article_tag %>
+    <% if @article.tags.empty? %>
+      <i>None</i>
+    <% else %>
+      <% @article.tags.each do |article_tag| %>
+        <%= render "tags/tag", tag: article_tag %>
+      <% end %>
     <% end %>
   </p>
 </div>
@@ -28,7 +32,9 @@
 <div class="ui segment">
   <h1>tl;dr</h1>
   <%= parse_katex @article.tldr %>
-  <%= image_tag(@article.tldr_image.attachment) unless @article.tldr_image.attachment.nil? %>
+  <% unless @article.tldr_image.attachment.nil? %>
+    <%= image_tag(@article.tldr_image.attachment, style: "width: 100%; height: auto;") %>
+  <% end %>
 </div>
 
 <%= parse_katex @article.body %>
