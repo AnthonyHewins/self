@@ -1,6 +1,5 @@
 0. UI todo list
 	a. Footer needs work and content
-	c. Login page probably needs a touch of custom CSS, and need to see how it looks in mobile
 	d. Images need an upper bound, they're massive in certain situations
         y. Font
 1. Got the parser to work on non-wysiwig fields, now impose more restrictive data cleansing rules?
