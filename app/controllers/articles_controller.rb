@@ -36,11 +36,6 @@ class ArticlesController < ApplicationController
     end
   end
 
-  def destroy
-    @article.destroy
-    redirect_to articles_url, blue: 'Article was successfully destroyed.'
-  end
-
   private
   def find_tags
     return nil if params[:tags].blank?
