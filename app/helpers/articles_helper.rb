@@ -1,4 +1,6 @@
 module ArticlesHelper
+  include ActionView::Helpers::SanitizeHelper
+
   def author_label(article)
     author = article.author
     handle = author.nil? ? "Anonymous" : author.handle
@@ -10,6 +12,6 @@ module ArticlesHelper
     partition.each_with_index do |text,i|
       partition[i] = Katex.render(text) if i.odd?
     end
-    partition.join('').html_safe
+    sanitize partition.join('').html_safe
   end
 end

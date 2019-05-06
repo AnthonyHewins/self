@@ -25,17 +25,20 @@ RSpec.describe User, type: :model do
   end
 
   context 'before_save' do
-    it 'downcases :handle' do
-      user = create :user, handle: "AAA"
-      expect(user.handle).to eq 'aaa'
+    it 'strips whitespace from :handle' do
+      expect(create(:user, handle: "   a    ").handle).to eq 'a'
     end
   end
   
   context ':handle' do
     it {should validate_length_of(:handle).is_at_least(1).is_at_most(64)}
-    it {should_not validate_presence_of(:handle)}
-    it {should validate_uniqueness_of(:handle).case_insensitive}
+    it {should validate_presence_of(:handle)}
     it {should_not allow_value("Anonymous").for :handle}
+
+    it 'is unique, with nil not being a legitimate use case' do
+      obj = create(:user)
+      expect(build(:user, handle: obj.handle)).to be_invalid
+    end
   end
   
   it '#owner returns self' do

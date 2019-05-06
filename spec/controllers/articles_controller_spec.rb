@@ -121,32 +121,4 @@ RSpec.describe ArticlesController, type: :controller do
       end
     end
   end
-
-  describe "DELETE #destroy" do
-    it "destroys the requested article if you're an admin" do
-      article = create :article
-      expect {
-        delete :destroy, params: {id: article.to_param}, session: valid_admin_session
-      }.to change(Article, :count).by(-1)
-    end
-
-    it "destroys the requested article if you own it" do
-      user = create :user
-      article = create :article, author: user
-      expect {
-        delete :destroy, params: {id: article.id}, session: {user_id: user.id}
-      }.to change(Article, :count).by(-1)
-    end
-
-    it "raises Permission::AccessDenied if you don't have permission" do
-      expect {
-        delete :destroy, params: {id: create(:article).to_param}, session: valid_session
-      }.to raise_error Permission::AccessDenied
-    end
-
-    it "redirects to the articles list if you're the owner/are an admin" do
-      delete :destroy, params: {id: create(:article).to_param}, session: valid_admin_session
-      expect(response).to redirect_to(articles_url)
-    end
-  end
 end

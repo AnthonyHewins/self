@@ -6,8 +6,8 @@ class Article < PermissionModel
 
   BODY_MIN = 128
   
-  belongs_to :author, class_name: "User", foreign_key: :author_id, optional: true
   has_and_belongs_to_many :tags
+  belongs_to :author, class_name: "User", foreign_key: :author_id, optional: true
 
   validates :title, presence: true, length: {maximum: TITLE_MAX, minimum: TITLE_MIN}
 
