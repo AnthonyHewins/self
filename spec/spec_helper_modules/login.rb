@@ -8,8 +8,9 @@ module Login
     end
     
     visit login_path
-    fill_in id: "email", with: user.email
+    fill_in id: "handle", with: user.handle
     fill_in id: "password", with: password
+    byebug
     click_on "Login"
     user
   end

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_relative '../spec_helper_modules/login'
 require_relative '../spec_helper_modules/ckeditor_helpers'
 
@@ -7,15 +7,15 @@ RSpec.configure do |config|
   config.include CkeditorHelpers
 end
 
-RSpec.describe 'Adding an article', type: :feature do
+RSpec.describe 'Article length validations', type: :feature do
   before :all do
     @title_blank = /title can't be blank/i
-    @title_short = /title is too short \(minimum is 3 characters\)/i
-    @title_long = /title is too long \(maximum is 256 characters\)/i
+    @title_short = /title is too short \(minimum is 10 characters\)/i
+    @title_long = /title is too long \(maximum is 1000 characters\)/i
 
     @body_short = /body is too short \(minimum is 128 characters\)/i
 
-    @tldr_long = /tldr is too long \(maximum is 160 characters\)/i
+    @tldr_long = /tldr is too long \(maximum is 1500 characters\)/i
 
     @expect = lambda do |*msgs|
       click_button "Create Article"
@@ -23,8 +23,8 @@ RSpec.describe 'Adding an article', type: :feature do
       msgs.each {|msg| expect(flash_message_text).to match msg}
     end
 
-    @set_title = lambda {|txt| find(:xpath, "/html/body/div[2]/form/div[1]/input").set txt}
-    @set_tldr = lambda {|txt| find(:xpath, '//*[@id="tldr"]').set txt}
+    @set_title = lambda {|txt| find("#title").set txt}
+    @set_tldr = lambda {|txt| find("#tldr").set txt}
 
     test_file = Rails.root.join('tmp/file.png')
     File.write(test_file, '')
@@ -46,8 +46,8 @@ RSpec.describe 'Adding an article', type: :feature do
       @expect.call @title_short, @body_short
     end
 
-    it "raises title too long, body too short on a title greater than 256 chars" do
-      @set_title.call('a' * 257)
+    it "raises title too long, body too short on a title greater than 1000 chars" do
+      @set_title.call('a' * 1001)
       @expect.call @body_short, @title_long
     end
 
@@ -59,7 +59,7 @@ RSpec.describe 'Adding an article', type: :feature do
 
   context 'only filling in tldr' do
     it 'raises all errors when tldr is over 160 characters' do
-      @set_tldr.call 'a' * 161
+      @set_tldr.call 'a' * (Article::TLDR_MAX + 1)
       @expect.call @tldr_long, @title_short, @title_blank, @body_short
     end
   end
@@ -74,16 +74,16 @@ RSpec.describe 'Adding an article', type: :feature do
   # JS tests that don't really belong in any other context
   context '', js: true do
     it 'handles a bare bones article, just barely making the cut on validations' do
-      @set_title.call 'Title'
-      @set_tldr.call 'Very short summary'
       fill_in_editor 'body', ('body' * 150)
+      @set_title.call 'Length 10.'
+      @set_tldr.call 'Very short summary'
       @expect.call(/success/i)
     end
 
     it 'handles a content-heavy article with all fields filled out' do
-      @set_title.call 'Title'
-      @set_tldr.call 'Very short summary'
       fill_in_editor 'body', ('body' * 150)
+      @set_title.call 'Length 10.'
+      @set_tldr.call 'Very short summary'
       @set_tldr_image.call
       @expect.call(/success/i)
     end

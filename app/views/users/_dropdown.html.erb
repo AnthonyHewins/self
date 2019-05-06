@@ -1,7 +1,7 @@
 <% if local_assigns.key? :users %>
   <% users = local_assigns[:users] %>
 <% else %>
-  <% users = User.select(:id, :email, :handle).all %>
+  <% users = User.select(:id, :handle).all %>
 <% end %>
 
 <%#================================================================%>
@@ -16,7 +16,6 @@
 
     <% users.each do |user| %>
       <div class="item" data-value="<%= user.id %>">
-        <%= image_tag(user.gravatar_url, rating: 'X', secure: true) %>
         <%= user.handle %>
       </div>
     <% end %>

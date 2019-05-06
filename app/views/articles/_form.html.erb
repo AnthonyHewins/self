@@ -1,12 +1,13 @@
 <%= form_with(model: article, local: true, id: uid(article), class: "ui form") do |form| %>
   <div class="field">
     <%= form.label :title %>
+    *note: if you're using LaTeX, make sure you space out the $$ so it gets picked up by search engines!
     <div class="ui two column grid">
       <div class="column">
-        <%= form.text_area :title, class: "katex-input", "data-target" => "#katex-output-title" %>
+        <%= form.text_area :title, id: "title", class: "katex-input", "data-target" => "#katex-output-title" %>
       </div>
       <div class="column" id="katex-output-title">
-        <%= render 'articles/katex_target', text: article.title %>
+        <%= render 'articles/katex_target', text: article&.title %>
       </div>
     </div>
   </div>
@@ -23,7 +24,7 @@
         <%= form.text_area :tldr, id: 'tldr', class: "katex-input", "data-target" => "#katex-output-tldr" %>
       </div>
       <div class="column" id="katex-output-tldr">
-        <%= render 'articles/katex_target', id: "katex-output-tldr", text: article.tldr %>
+        <%= render 'articles/katex_target', id: "katex-output-tldr", text: article&.tldr %>
       </div>
     </div>
   </div>
@@ -40,11 +41,18 @@
         <%= form.text_area :body, class: "wysiwig katex-input", "data-target" => "#katex-output-body", id: 'body' %>
       </div>
       <div class="column" id="katex-output-body">
-        <%= render 'articles/katex_target', id: "", text: article.body %>
+        <%= render 'articles/katex_target', id: "katex-output-body", text: article&.body %>
       </div>
     </div>
   </div>
 
+  <div class="field">
+    <div class="ui checkbox">
+      <%= form.check_box :anonymous, id: "anonymous" %>
+      <%= form.label "Post anonymously (the database will not know who posted this)" %>
+    </div>
+  </div>
+  
   <div class="actions">
     <%= form.submit class: "ui primary button", id: "submit-article" %>
   </div>

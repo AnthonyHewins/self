@@ -24,28 +24,16 @@ RSpec.describe "Login", type: :feature do
       end
     end
 
-    it "when the email doesn't match any email in the DB" do
-      @expect_macro.call User.new(email: "a@a.com"), "doesnt-matter-wont-work"
+    it "when the handle doesn't match any handle in the DB" do
+      @expect_macro.call User.new(handle: "a@a.com"), "doesnt-matter-wont-work"
     end
 
-    it "when the email matches an email that isn't confirmed, but the password is wrong" do
-      @expect_macro.call create(:user, email_confirmed: false), "invalid-pw"
-    end
-
-    it "when the email matches an email that is confirmed, but the password is wrong" do
+    it "when the handle is found in the DB but the password is wrong" do
       @expect_macro.call create(:user), "invalid-pw"
     end
   end
 
-  it "shows a warning flash message when the email's not confirmed but credentials match" do
-    user = create(:user, email_confirmed: false, password: 'a!!!!!')
-    login user, 'a!!!!!'
-    expect(page).to have_selector "div",
-                                  class: @css_class.call("warning"),
-                                  text: SessionsController::EMAIL_NOT_CONFIRMED_PROMPT
-  end
-
-  it "shows an info flash message when the email's confirmed and pw is right" do
+  it "shows an info flash message when login is done right" do
     login
     expect(page).to have_selector "div",
                                   class: @css_class.call("info"),

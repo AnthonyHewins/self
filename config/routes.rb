@@ -11,11 +11,7 @@ Rails.application.routes.draw do
   
   # Content
   resources :articles
-  resources :users do
-    collection do
-      get "confirm/:confirmation_token", to: "users#confirm_email", as: "confirm_email"
-    end
-  end
+  resources :users
 
   get 'contact' => 'static#contact'
   get 'privacy' => 'static#privacy'
