@@ -1,10 +1,11 @@
 require 'rails_helper'
+require_relative '../custom_matchers/have_alias_method'
 
 RSpec.describe Article, type: :model do
   it {should validate_presence_of :title}
   it {should validate_length_of(:title)
-              .is_at_least(Article::TITLE_MIN)
-              .is_at_most(Article::TITLE_MAX)}
+               .is_at_least(Article::TITLE_MIN)
+               .is_at_most(Article::TITLE_MAX)}
 
   it {should validate_length_of(:tldr).is_at_most Article::TLDR_MAX}
 
@@ -13,8 +14,25 @@ RSpec.describe Article, type: :model do
   
   it {should have_and_belong_to_many(:tags)}
 
+  it {should have_alias_method :owner, :author}
+
   before :each do
     @obj = create :article
+  end
+
+  context 'before_save' do
+    it ":tldr is nil'd out when it equals ''" do
+      @obj.update tldr: ''
+      expect(@obj.tldr).to be nil
+    end
+    
+    %i(title tldr body).each do |sym|
+      it "strips :#{sym} before save" do
+        old = @obj.send sym
+        @obj.update(sym => "   #{old}   ")
+        expect(@obj.send(sym)).to eq old
+      end
+    end
   end
 
   context '::search(q, tags:, author:)' do

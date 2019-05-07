@@ -5,17 +5,25 @@ class Article < PermissionModel
   TLDR_MAX = 1500
 
   BODY_MIN = 128
-  
+
   has_and_belongs_to_many :tags
   belongs_to :author, class_name: "User", foreign_key: :author_id, optional: true
 
-  validates :title, presence: true, length: {maximum: TITLE_MAX, minimum: TITLE_MIN}
+  validates :title, presence: true, length: {minimum: TITLE_MIN, maximum: TITLE_MAX}
 
   validates :tldr, length: {maximum: TLDR_MAX}
 
   validates :body, presence: true, length: {minimum: BODY_MIN}
 
   has_one_attached :tldr_image
+
+  before_save do |record|
+    record.title.strip!
+    record.body.strip!
+    unless record.tldr.nil?
+      record.tldr = record.tldr.empty? ? nil : record.tldr.strip
+    end
+  end
 
   def self.search(q=nil, tags: nil, author: nil)
     query = Article.left_outer_joins(:tags, :author).all
@@ -24,13 +32,11 @@ class Article < PermissionModel
     q.blank? ? query : omnisearch(query, q)
   end
 
-  def owner
-    self.author
-  end
+  alias_method :owner, :author
 
   private
-  def self.omnisearch(query_chain, query)
-    query_chain.where "title ilike :q or tldr ilike :q or body ilike :q", q: "%#{query}%"
+  def self.omnisearch(query_chain, q)
+    query_chain.where "title ilike :q or tldr ilike :q or body ilike :q", q: "%#{q}%"
   end
 
   def self.search_by_tags(query_chain, tags)

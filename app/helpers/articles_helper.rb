@@ -10,8 +10,8 @@ module ArticlesHelper
   def parse_katex(html)
     partition = html.split('$$')
     partition.each_with_index do |text,i|
-      partition[i] = Katex.render(text) if i.odd?
+      partition[i] = i.odd? ? Katex.render(text) : sanitize(text)
     end
-    sanitize partition.join('').html_safe
+    partition.join('').html_safe
   end
 end
