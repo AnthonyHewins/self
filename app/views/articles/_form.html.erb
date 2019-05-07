@@ -14,7 +14,7 @@
 
   <div class="field">
     <%= form.label :tags, "Tag", class: "label" %>
-    <%= render 'tags/tag_dropdown' %>
+    <%= render 'tags/tag_dropdown', multiple: true, selected: article.tags.map(&:id) %>
   </div>
 
   <div class="field">
@@ -48,9 +48,12 @@
 
   <div class="field">
     <div class="ui checkbox">
-      <%= form.check_box :anonymous, id: "anonymous" %>
-      <%= form.label("Post anonymously (the database will not know who posted this, and you can't ever change it,
-                      since you forfeit ownership)") %>
+      <%= form.check_box :anonymous, checked: article.author.nil?, id: "anonymous" %>
+      <label>
+        Post anonymously (the database will not know who posted this,
+        <strong><i>and you can never change it</i></strong>,
+        since you forfeit all ownership)
+      </label>
     </div>
   </div>
   

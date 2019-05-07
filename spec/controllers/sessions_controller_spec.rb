@@ -9,15 +9,18 @@ RSpec.describe SessionsController, type: :controller do
   end
 
   describe "POST #create" do
+    before :each do
+      @password = "a!!!!!"
+      @user = create :user, password: @password
+    end
+
     it "creates a login session for the user when credentials match" do
-      password = "a!!!!!"
-      user = create :user, password: password
-      post :create, params: {handle: user.handle, password: password}
-      expect(session[:user_id]).to eq user.id
+      post :create, params: {handle: @user.handle, password: @password}
+      expect(session[:user_id]).to eq @user.id
     end
 
     it "doesn't create a login session when the credentials don't match" do
-      post :create, params: {handle: "garbage", password: "garbage"}
+      post :create, params: {handle: @user.handle, password: "garbage-pw"}
       expect(session[:user_id]).to be_nil
     end
   end

@@ -10,7 +10,6 @@ module Login
     visit login_path
     fill_in id: "handle", with: user.handle
     fill_in id: "password", with: password
-    byebug
     click_on "Login"
     user
   end

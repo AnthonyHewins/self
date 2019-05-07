@@ -20,13 +20,11 @@ class Article < PermissionModel
   before_save do |record|
     record.title.strip!
     record.body.strip!
-    unless record.tldr.nil?
-      record.tldr = record.tldr.empty? ? nil : record.tldr.strip
-    end
+    record.tldr = record.tldr.blank? ? nil : record.tldr.strip
   end
 
   def self.search(q=nil, tags: nil, author: nil)
-    query = Article.left_outer_joins(:tags, :author).all
+    query = Article.joins(:tags).left_outer_joins(:author).all
     query = search_by_author(query, author)
     query = search_by_tags(query, tags)
     q.blank? ? query : omnisearch(query, q)
@@ -45,7 +43,7 @@ class Article < PermissionModel
       tags.each {|tag| query_chain = search_by_tags(query_chain, tag)}
       return query_chain
     when Tag
-      query_chain.where 'tags.id = ?', tags.id
+      query_chain.where 'articles_tags.tag_id = ?', tags.id
     when String
       tags.empty? ? query_chain : query_chain.where('tags.name = ?', tags.downcase)
     when NilClass

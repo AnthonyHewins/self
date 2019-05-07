@@ -7,7 +7,11 @@ class ArticlesController < ApplicationController
   before_action :set_article, only: :show
 
   def index
-    @articles = Article.search params[:q], tags: find_tags, author: find_author
+    @articles = Article.search(
+      params[:q],
+      tags: find_tags(params[:tags]),
+      author: find_author(params[:author]),
+    )
   end
 
   def new
@@ -26,8 +30,6 @@ class ArticlesController < ApplicationController
   end
 
   def update
-    article_params.delete(:author) unless @article.author.nil?
-    
     if @article.update(article_params)
       redirect_to @article, flash: {green: 'Article was successfully updated.'}
     else
@@ -37,14 +39,12 @@ class ArticlesController < ApplicationController
   end
 
   private
-  def find_tags
-    return nil if params[:tags].blank?
-    params[:tags].split(',').map {|i| Tag.find i}
+  def find_tags(tags)
+    tags.blank? ? [] : tags.split(',').map {|i| Tag.find i}
   end
 
-  def find_author
-    return nil if params[:author].blank?
-    User.find params[:author]
+  def find_author(author)
+    author.blank? ? nil : User.find(author)
   end
 
   def set_article
@@ -54,8 +54,6 @@ class ArticlesController < ApplicationController
   def article_params
     hash = params.require(:article).permit :title, :body, :tldr, :tldr_image, :anonymous
     hash[:author] = hash.delete(:anonymous) == "1" ? nil : current_user
-    return hash unless params.key? :tags
-    hash[:tags] = params[:tags].split(', ').map {|id| Tag.find id}
-    hash
+    hash.merge tags: find_tags(params[:tags])
   end
 end
