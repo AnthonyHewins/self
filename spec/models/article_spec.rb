@@ -36,17 +36,75 @@ RSpec.describe Article, type: :model do
   end
 
   context '::search(q, tags:, author:)' do
-    it 'uses q to find with ::omnisearch' do
-      expect(Article.search @obj.title).to include @obj
+    context 'omnisearch' do
+      %i(title tldr body).each do |sym|
+        it "finds based on :#{sym}, case-insensitively" do
+          expect(Article.search @obj.send(sym)).to include(@obj)
+        end
+      end
     end
 
-    it 'uses :tags to find with ::search_by_tags' do
-      expect(Article.search author: @obj.author).to include @obj
+    context 'with tags' do
+      before :each do
+        @tags = create_list :tag, 2
+        @obj.update tags: @tags
+      end
+
+      it 'raises TypeError on anything else' do
+        expect{Article.search tags: Object.new}.to raise_error TypeError
+      end
+
+      it "returns query_chain on nil" do
+        expect(Article.search)
+          .to match_array Article.left_outer_joins(:tags, :author)
+      end
+
+      it 'finds articles based on the object id' do
+        expect(Article.search tags: @tags.first.id).to include @obj
+      end
+
+      it 'finds articles based on the object' do
+        expect(Article.search tags: @tags.first).to include @obj
+      end
+
+      [@tags, @tags.to_a].each do |collection|
+        context "on #{collection.class}" do
+          it "shows Articles that have all the tags within the collection" do
+            expect(Article.search tags: collection).to include @obj
+          end
+
+          it "doesnt show things that only have a proper subset of tags given in the collection" do
+            new_conditions = @tags + [create(:tag)]
+            expect(Article.search tags: new_conditions).to_not include @obj
+          end
+        end
+      end
     end
 
-    it 'uses :tags to find with ::search_by_tags' do
-      @obj.update tags: [create(:tag)]
-      expect(Article.search tags: Tag.first).to include @obj
+    context 'with author' do
+      before :each do
+        @author = create :user
+        @obj.update author: @author
+      end
+
+      it 'raises TypeError on anything else' do
+        expect {Article.search author: 1}.to raise_error TypeError
+      end
+
+      [nil, ''].each do |blank|
+        it "returns query_chain on #{blank.inspect}" do
+          expect(Article.search author: blank)
+            .to eq Article.left_outer_joins(:tags, :author).all
+        end
+      end
+
+      it 'on User finds the users authored articles' do
+        expect(Article.search author: @author).to include @obj
+      end
+
+      it 'returns articles that have author with names equal to arg2 on String' do
+        expect(Article.search author: @author.handle).to include @obj
+      end
     end
   end
 
@@ -61,98 +119,6 @@ RSpec.describe Article, type: :model do
 
     it 'blocks saving if the FK is invalid' do
       expect{create(:article, author_id: 9999)}.to raise_error(ActiveRecord::InvalidForeignKey)
-    end
-  end
-
-  context 'private:' do
-    context '::omnisearch(query_chain, query)' do
-      %i(title tldr body).each do |sym|
-        it "finds based on :#{sym}, case-insensitively" do
-          expect(Article.send :omnisearch, Article.all, @obj.send(sym).upcase).to include(@obj)
-        end
-
-        it "finds based on :#{sym}" do
-          expect(Article.send :omnisearch, Article.all, @obj.send(sym)).to include(@obj)
-        end
-      end
-    end
-
-    context '::search_by_tags(query_chain, tags)' do
-      before :all do
-        @bind = lambda do |i|
-          Article.send :search_by_tags, Article.left_outer_joins(:tags).all, i
-        end
-      end
-      
-      before :each do
-        @tag = create :tag
-        @obj.update tags: [@tag]
-      end
-
-      it 'raises TypeError on anything else' do
-        expect {@bind.call 1}.to raise_error TypeError
-      end
-
-      it 'returns query_chain on Nil' do
-        expect(@bind.call nil).to match_array Article.left_outer_joins(:author).all
-      end
-
-      it 'returns articles that have tags equal to arg2 on Tag' do
-        expect(@bind.call @tag).to include @obj
-      end
-
-      it 'returns query_chain back on empty String' do
-        expect(@bind.call '').to match_array Article.all
-      end
-
-      it 'returns articles that have tags with names equal to arg2 on String' do
-        expect(@bind.call @tag.name).to include @obj
-      end
-
-      it 'returns articles that have tags with names equal to arg2.downcase on String' do
-        expect(@bind.call @tag.name.upcase).to include @obj
-      end
-
-      it 'returns articles that have tags in arg2 on Array' do
-        expect(@bind.call Tag.all.to_a).to include @obj
-      end
-
-      it 'returns articles that have tags in arg2 on ActiveRecord::Relation' do
-        expect(@bind.call Tag.all).to include @obj
-      end
-    end
-
-    context '::search_by_author(query_chain, author)' do
-      before :all do
-        @bind = lambda do |i|
-          Article.send :search_by_author, Article.left_outer_joins(:author).all, i
-        end
-      end
-      
-      before :each do
-        @author = create :user
-        @obj.update author: @author
-      end
-
-      it 'raises TypeError on anything else' do
-        expect {@bind.call 1}.to raise_error TypeError
-      end
-
-      it 'returns query_chain on Nil' do
-        expect(@bind.call nil).to eq Article.left_outer_joins(:author).all
-      end
-
-      it 'returns articles that have author equal to arg2 on Author' do
-        expect(@bind.call @author).to include @obj
-      end
-
-      it 'returns query_chain back on empty String' do
-        expect(@bind.call '').to match_array Article.all
-      end
-
-      it 'returns articles that have author with names equal to arg2 on String' do
-        expect(@bind.call @author.handle).to include @obj
-      end
     end
   end
 end

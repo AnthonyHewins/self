@@ -14,7 +14,7 @@
 
   <div class="field">
     <%= form.label :tags, "Tag", class: "label" %>
-    <%= render 'tags/tag_dropdown', multiple: true, selected: article.tags.map(&:id) %>
+    <%= render 'tags/tag_dropdown', multiple: true, selected_ids: article&.tags.map(&:id) %>
   </div>
 
   <div class="field">

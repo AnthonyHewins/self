@@ -24,33 +24,45 @@ class Article < PermissionModel
   end
 
   def self.search(q=nil, tags: nil, author: nil)
-    query = Article.joins(:tags).left_outer_joins(:author).all
+    query = search_by_tags tags
     query = search_by_author(query, author)
-    query = search_by_tags(query, tags)
     q.blank? ? query : omnisearch(query, q)
   end
 
   alias_method :owner, :author
 
   private
-  def self.omnisearch(query_chain, q)
-    query_chain.where "title ilike :q or tldr ilike :q or body ilike :q", q: "%#{q}%"
-  end
-
-  def self.search_by_tags(query_chain, tags)
+  def self.search_by_tags(tags)
     case tags
     when Array, ActiveRecord::Relation
-      tags.each {|tag| query_chain = search_by_tags(query_chain, tag)}
-      return query_chain
+      tags = tags.map(&:id) if tags.first.instance_of?(Tag)
+      join tags
+    when Integer
+      join.where "articles_tags.tag_id = ?", tags
     when Tag
-      query_chain.where 'articles_tags.tag_id = ?', tags.id
-    when String
-      tags.empty? ? query_chain : query_chain.where('tags.name = ?', tags.downcase)
+      join.where "articles_tags.tag_id = ?", tags.id
     when NilClass
-      query_chain
+      join
     else
       raise TypeError
     end
+  end
+
+  def self.join(ids=nil)
+    return Article.left_outer_joins(:tags, :author) if ids.nil?
+    ids.map! {|i| Integer(i)}.uniq
+    join_query = ids.map do |id|
+      "inner join articles_tags t#{id} on t#{id}.article_id = articles.id and
+       t#{id}.tag_id = #{id}"
+    end
+    Article.left_outer_joins(:author).joins(
+      "#{join_query.join(' ')}
+       left outer join users on users.id = articles.author_id"
+    )
+  end
+
+  def self.omnisearch(query_chain, q)
+    query_chain.where "title ilike :q or tldr ilike :q or body ilike :q", q: "%#{q}%"
   end
 
   def self.search_by_author(query_chain, author)
@@ -58,7 +70,7 @@ class Article < PermissionModel
     when User
       query_chain.where author: author
     when String
-      author.empty? ? query_chain : query_chain.where('users.handle like :author', author: author)
+      author.empty? ? query_chain : query_chain.where('users.handle = :author', author: author)
     when NilClass
       query_chain
     else

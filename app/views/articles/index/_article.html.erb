@@ -1,9 +1,7 @@
-<% img_link = article.tldr_image.attachment || "empty_set.png" %>
-
 <div class="item" id="<%= uid(article) %>">
 
   <div class="ui tiny image">
-    <%= image_tag img_link %>
+    <%= image_tag(article.tldr_image.attachment || "empty_set.png") %>
   </div>
 
   <div class="content">

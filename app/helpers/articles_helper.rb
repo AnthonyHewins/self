@@ -8,10 +8,16 @@ module ArticlesHelper
   end
 
   def parse_katex(html)
+    return nil if html.blank?
+    safe_render(html).join('').html_safe
+  end
+
+  private
+  def safe_render(html)
     partition = html.split('$$')
     partition.each_with_index do |text,i|
       partition[i] = i.odd? ? Katex.render(text) : sanitize(text)
     end
-    partition.join('').html_safe
+    partition
   end
 end
