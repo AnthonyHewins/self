@@ -1,13 +1,9 @@
 <html lang="en">
   <head>
+    <title>403</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-
-    <title>500</title>
-
-    <!-- Google font -->
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,700" rel="stylesheet">
 
     <style>
@@ -41,7 +37,7 @@
           line-height: 1.4;
       }
 
-      .notfound .error-500 {
+      .notfound .forbidden-403 {
           position: absolute;
           left: 0;
           top: 0;
@@ -50,7 +46,7 @@
           z-index: -1;
       }
 
-      .notfound .error-500 h1 {
+      .notfound .forbidden-403 h1 {
           font-family: 'Poppins', sans-serif;
           font-size: 238px;
           font-weight: 700;
@@ -144,12 +140,12 @@
       }
 
       @media only screen and (max-width: 767px) {
-          .notfound .error-500 {
+          .notfound .forbidden-403 {
               height: 110px;
               line-height: 110px;
           }
 
-          .notfound .error-500 h1 {
+          .notfound .forbidden-403 h1 {
               font-size: 170px;
           }
 
@@ -163,11 +159,11 @@
       }
 
       @media only screen and (max-width: 480px) {
-          .notfound .error-500 {
+          .notfound .forbidden-403 {
               left: 40px;
           }
 
-          .notfound .error-500 h1 {
+          .notfound .forbidden-403 h1 {
               font-size: 120px;
           }
 
@@ -182,10 +178,11 @@
 
     <div id="notfound">
       <div class="notfound">
-	<div class="error-500">
-	  <h1>500</h1>
+	<div class="forbidden-403">
+	  <h1>403</h1>
 	</div>
-	<h2>General server error. We may be down for maintenance.</h2>
+	<h2>Access denied</h2>
+	<h2>You need permission to access this.</h2>
 	<a href="/"><span class="arrow"></span>Back to homepage</a>
       </div>
     </div>
