@@ -1,6 +1,6 @@
 <% article = local_assigns[:article] || Article.new %>
 
-<%= form_with(model: article, local: true, id: uid(article), class: "ui form") do |form| %>  
+<%= form_with(model: article, local: true, id: dom_id(article), class: "ui form") do |form| %>  
   <div class="field">
     <%= form.label :title %>
     *note: if you're using LaTeX, make sure you space out the $$ so it gets picked up by search engines!

@@ -1,4 +1,4 @@
-<div class="item" id="<%= uid(article) %>">
+<div class="item" id="<%= dom_id(article) %>">
 
   <div class="ui tiny image">
     <%= image_tag(article.tldr_image.attachment || "empty_set.png") %>
