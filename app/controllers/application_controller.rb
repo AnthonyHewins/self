@@ -5,8 +5,11 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user
 
-  rescue_from Permission::AccessDenied do
-    render file: "public/403", status: :forbidden
+  # Raise the exception if we're testing to validate a full interrupt occurs
+  unless Rails.env.test?
+    rescue_from Permission::AccessDenied do
+      render file: "public/403", status: :forbidden
+    end
   end
 
   def current_user

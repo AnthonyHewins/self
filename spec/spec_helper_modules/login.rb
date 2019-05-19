@@ -1,8 +1,8 @@
 module Login  
-  def login(user=nil, password=nil)
+  def login(user=nil, password=nil, admin: false)
     if user.nil?
       password = "a!!!!!"
-      user = create :user, password: password
+      user = create :user, password: password, admin: admin
     else
       raise ArgumentError, "Supply a password with the user" if password.nil?
     end

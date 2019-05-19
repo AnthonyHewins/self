@@ -1,10 +1,10 @@
 require 'rails_helper'
-require_relative '../spec_helper_modules/login'
-require_relative '../spec_helper_modules/ckeditor_helpers'
+require_relative '../../spec_helper_modules/login'
+require_relative '../../spec_helper_modules/article_fill_helper'
 
 RSpec.configure do |config|
   config.include Login
-  config.include CkeditorHelpers
+  config.include ArticleFillHelper
 end
 
 RSpec.describe 'Article length validations', type: :feature do
@@ -18,13 +18,14 @@ RSpec.describe 'Article length validations', type: :feature do
     @tldr_long = /tldr is too long \(maximum is 1500 characters\)/i
 
     @expect = lambda do |*msgs|
-      click_button "Create Article"
+      click_button "Submit"
       flash_message_text = find('#flash').text
       msgs.each {|msg| expect(flash_message_text).to match msg}
     end
 
     @set_title = lambda {|txt| find("#title").set txt}
     @set_tldr = lambda {|txt| find("#tldr").set txt}
+    @set_body = lambda {|txt| find("#body").set txt}
 
     test_file = Rails.root.join('tmp/file.png')
     File.write(test_file, '')
@@ -64,28 +65,23 @@ RSpec.describe 'Article length validations', type: :feature do
     end
   end
 
-  context 'only filling in the body', js: true do
+  context 'only filling in the body' do
     it 'raises body, title too short if body is under 128 chars' do
-      fill_in_editor 'body', 'a'
+      @set_body.call'a'
       @expect.call @body_short, @title_blank, @title_short
     end
   end
 
-  # JS tests that don't really belong in any other context
-  context '', js: true do
-    it 'handles a bare bones article, just barely making the cut on validations' do
-      fill_in_editor 'body', ('body' * 150)
-      @set_title.call 'Length 10.'
-      @set_tldr.call 'Very short summary'
-      @expect.call(/success/i)
-    end
+  it 'handles a bare bones article, just barely making the cut on validations' do
+    @set_body.call('body' * 150)
+    @set_title.call 'Length 10.'
+    @set_tldr.call 'Very short summary'
+    @expect.call(/success/i)
+  end
 
-    it 'handles a content-heavy article with all fields filled out' do
-      fill_in_editor 'body', ('body' * 150)
-      @set_title.call 'Length 10.'
-      @set_tldr.call 'Very short summary'
-      @set_tldr_image.call
-      @expect.call(/success/i)
-    end
+  it 'handles a content-heavy article with all fields filled out' do
+    random_fill_in
+    @set_tldr_image.call
+    @expect.call(/success/i)
   end
 end

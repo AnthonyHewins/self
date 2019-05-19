@@ -22,7 +22,7 @@ class ArticlesController < ApplicationController
     @article = Article.new article_params
 
     if @article.save
-      redirect_to @article, green: 'Article was successfully created.'
+      redirect_to @article, flash: {green: 'Article was successfully created.'}
     else
       flash.now[:red] = @article.errors
       render :new
