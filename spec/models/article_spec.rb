@@ -2,6 +2,22 @@ require 'rails_helper'
 require_relative '../custom_matchers/have_alias_method'
 
 RSpec.describe Article, type: :model do
+  before :each do
+    @obj = create :article
+  end
+
+  context "constants" do
+    [[:TITLE_MIN, 10], [:TITLE_MAX, 1000], [:TLDR_MAX, 1500], [:BODY_MIN, 128]].each do |name, val|
+      it "#{name} equals #{val}" do
+        expect(Article.const_get name).to eq val
+      end
+    end
+  end
+
+  it {should have_and_belong_to_many(:tags)}
+
+  it {should belong_to(:author).class_name("User").with_foreign_key(:author_id).optional}
+  
   it {should validate_presence_of :title}
   it {should validate_length_of(:title)
                .is_at_least(Article::TITLE_MIN)
@@ -11,14 +27,6 @@ RSpec.describe Article, type: :model do
 
   it {should validate_presence_of :body}
   it {should validate_length_of(:body).is_at_least(Article::BODY_MIN)}
-  
-  it {should have_and_belong_to_many(:tags)}
-
-  it {should have_alias_method :owner, :author}
-
-  before :each do
-    @obj = create :article
-  end
 
   context 'before_save' do
     it ":tldr is nil'd out when it equals ''" do
@@ -108,17 +116,5 @@ RSpec.describe Article, type: :model do
     end
   end
 
-  context '#author' do
-    it 'optionally allows nil' do
-      expect(create(:article, author: nil)).to be_valid
-    end
-
-    it 'works correctly with a valid foreign key' do
-      expect(create(:article, author: create(:user))).to be_valid
-    end
-
-    it 'blocks saving if the FK is invalid' do
-      expect{create(:article, author_id: 9999)}.to raise_error(ActiveRecord::InvalidForeignKey)
-    end
-  end
+  it {should have_alias_method :owner, :author}
 end

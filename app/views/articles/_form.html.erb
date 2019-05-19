@@ -58,7 +58,9 @@
       </label>
     </div>
   </div>
-  
+
+  *disclaimer about text: if there's <strong>any</strong> HTML detected in title/tldr, it will be <strong>deleted<strong>.
+   If you attempt to inject HTML into body, it will also be deleted. Use only what the editor provides.
   <div class="actions">
     <%= form.submit "Submit", class: "ui primary button", id: "submit-article" %>
   </div>

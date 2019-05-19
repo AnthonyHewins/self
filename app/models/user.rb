@@ -5,21 +5,20 @@ class User < PermissionModel
 
   validate :custom_validations
 
-  PW_MIN_LENGTH = 6
-  PW_MAX_LENGTH = 72
+  PW_MIN = 6
+  PW_MAX = 72 # this constraint is given by has_secure_password
   validates :password,
             presence: true,
-            confirmation: true,
-            length: {minimum: PW_MIN_LENGTH, maximum: PW_MAX_LENGTH},
-            format: {with: /(?=.*[a-zA-Z])(?=.*[0-9!@\\\#$%^&*()<>]).{#{PW_MIN_LENGTH},#{PW_MAX_LENGTH}}/,
+            length: {minimum: PW_MIN},
+            format: {with: /(?=.*[a-zA-Z])(?=.*[0-9!@\\\#$%^&*()<>]).{#{PW_MIN},#{PW_MAX}}/,
                      message: "must contain a letter and a special character."},
             if: lambda {|user| user.new_record? || !user.password.blank?}
 
-  HANDLE_MIN_LENGTH = 1
-  HANDLE_MAX_LENGTH = 64
+  HANDLE_MIN = 1
+  HANDLE_MAX = 64
   validates :handle,
             presence: true,
-            length: {minimum: HANDLE_MIN_LENGTH, maximum: HANDLE_MAX_LENGTH},
+            length: {in: HANDLE_MIN..HANDLE_MAX},
             uniqueness: true
 
   before_save do |record|

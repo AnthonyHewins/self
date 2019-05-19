@@ -1,25 +1,33 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-
   it {should have_secure_password}
   it {should have_many(:articles).dependent(:nullify)}
+
+  context "constants" do
+    [[:PW_MIN, 6], [:PW_MAX, 72], [:HANDLE_MIN, 1], [:HANDLE_MAX, 64]].each do |name, val|
+      it "#{name} equals #{val}" do
+        expect(User.const_get name).to eq val
+      end
+    end
+  end
 
   context ':password' do
     subject {build :user, password: nil}
     it {should validate_presence_of :password}
-    it {should validate_confirmation_of :password}
-    it {should validate_length_of(:password).is_at_least(6).is_at_most(72)}
+    it {should validate_length_of(:password)
+                .is_at_least(User::PW_MIN)
+                .is_at_most(User::PW_MAX)}
     it {should_not allow_value('a' * 6).for :password} # Missing number/special char
     it {should_not allow_value('1' * 6).for :password} # Missing letter
     it {should_not allow_value('!' * 6).for :password} # Missing letter
-    
+
     it 'shouldnt validate the password when it isnt being changed' do
       user = create :user
       expect{user.update handle: "hi12"}.to_not raise_error
     end
-    
-    it 'password should allow all special chars' do
+
+    it 'password should allow anything in "!@\#$%^&*()<>"' do
       '!@\#$%^&*()<>'.each_char {|i| should allow_value("a#{i}" * 3).for :password}
     end
   end
@@ -29,7 +37,7 @@ RSpec.describe User, type: :model do
       expect(create(:user, handle: "   a    ").handle).to eq 'a'
     end
   end
-  
+
   context ':handle' do
     it {should validate_length_of(:handle).is_at_least(1).is_at_most(64)}
     it {should validate_presence_of(:handle)}
@@ -40,19 +48,19 @@ RSpec.describe User, type: :model do
       expect(build(:user, handle: obj.handle)).to be_invalid
     end
   end
-  
+
   it '#owner returns self' do
     user = create :user
-    expect(user.owner).to eq user
+    expect(user.owner).to be user
   end
   
-  context '#has_permission?' do
+  context '#has_permission?(*models, &block)' do
     before :each do
       @random_dudes_articles = [create(:article, author: create(:user))] * 2
     end
 
-    it 'throws an error if all the models supplied do not subclass PermissionModel' do
-      expect{create(:user).has_permission? "string doesn't inherit PermissionModel"}.to raise_error TypeError
+    it 'throws TypeError unless models.all? are instances of PermissionModel' do
+      expect{create(:user).has_permission? ""}.to raise_error TypeError
     end
     
     context 'as an admin' do
