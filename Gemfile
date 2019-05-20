@@ -14,7 +14,7 @@ gem 'puma', '~> 3.7'
 gem 'pg'
 
 # Controller
-gem 'bcrypt', require: 'bcrypt'
+gem 'will_paginate'
 
 # Assets
 gem 'uglifier', '>= 1.3.0'
