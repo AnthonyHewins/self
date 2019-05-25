@@ -15,4 +15,8 @@
       <%= render 'articles/index/article', article: article %>
     <% end %>
   </div>
+
+  <div class="pagination">
+    <%= will_paginate @articles %>
+  </div>
 </div>

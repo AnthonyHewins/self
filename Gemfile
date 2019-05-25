@@ -13,6 +13,9 @@ gem 'puma', '~> 3.7'
 # DB
 gem 'pg'
 
+# Model
+gem 'bcrypt'
+
 # Controller
 gem 'will_paginate'
 
@@ -23,7 +26,7 @@ gem 'webpacker', git: "https://github.com/rails/webpacker.git"
 # Views
 gem 'semantic-ui-sass'
 gem 'gravtastic'
-gem 'turbolinks', '~> 5' # Disabled to prevent JS not reloading for Vue
+gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 gem 'jquery-rails'
 gem 'katex'

@@ -2,3 +2,9 @@
   Place all the styles related to the matching controller here.
   They will automatically be included in application.css.
 */
+
+.pagination a {
+    border: 1px solid #105cb6;
+    padding: 0.2em 0.5em;
+    margin-right: 1px;
+}

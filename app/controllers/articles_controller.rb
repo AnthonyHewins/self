@@ -11,7 +11,7 @@ class ArticlesController < ApplicationController
       params[:q],
       tags: find_tags(params[:tags]),
       author: find_author(params[:author]),
-    )
+    ).paginate(page: params[:page], per_page: 10)
   end
 
   def new
