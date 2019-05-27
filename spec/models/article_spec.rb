@@ -63,8 +63,8 @@ RSpec.describe Article, type: :model do
       end
 
       it "returns query_chain on nil" do
-        expect(Article.search)
-          .to match_array Article.left_outer_joins(:tags, :author)
+        expect(Article.search.to_a)
+          .to match_array Article.includes(:tags).left_outer_joins(:author).to_a
       end
 
       it 'finds articles based on the object id' do
@@ -101,8 +101,8 @@ RSpec.describe Article, type: :model do
 
       [nil, ''].each do |blank|
         it "returns query_chain on #{blank.inspect}" do
-          expect(Article.search author: blank)
-            .to eq Article.left_outer_joins(:tags, :author).all
+          expect(Article.search(author: blank).to_a)
+            .to eq Article.left_outer_joins(:tags, :author).all.to_a
         end
       end
 

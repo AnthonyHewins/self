@@ -11,7 +11,7 @@ RSpec.describe "articles/index", type: :view do
   describe "displays" do
     before :each do
       @article = create :article
-      @articles = [@article]
+      @articles = Article.paginate(page: 1, per_page: 10)
       render
     end
 

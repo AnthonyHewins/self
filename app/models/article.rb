@@ -32,35 +32,25 @@ class Article < PermissionModel
   alias_method :owner, :author
 
   private
-  def self.search_by_tags(tags)
+  def self.search_by_tags(tags, query=nil)
     case tags
     when Array, ActiveRecord::Relation
-      tags = tags.map(&:id) if tags.first.instance_of?(Tag)
-      join tags
-    when Integer
-      join.where "articles_tags.tag_id = ?", tags
-    when Tag
-      join.where "articles_tags.tag_id = ?", tags.id
+      query = join
+      tags.each {|tag| query = search_by_tags(tag, query)}
+      return query
+    when Integer, Tag
+      join.where tags: {id: tags}
     when NilClass
-      join
+      Article.left_outer_joins(:author)
     else
       raise TypeError
     end
   end
 
-  def self.join(ids=nil)
-    return Article.left_outer_joins(:tags, :author) if ids.nil?
-    ids.map! {|i| Integer(i)}.uniq
-    join_query = ids.map do |id|
-      "inner join articles_tags t#{id} on t#{id}.article_id = articles.id and
-       t#{id}.tag_id = #{id}"
-    end
-    Article.left_outer_joins(:author).joins(
-      "#{join_query.join(' ')}
-       left outer join users on users.id = articles.author_id"
-    )
+  def self.join
+    Article.includes(:tags).left_outer_joins(:author)
   end
-
+    
   def self.omnisearch(query_chain, q)
     query_chain.where "title ilike :q or tldr ilike :q or body ilike :q", q: "%#{q}%"
   end
