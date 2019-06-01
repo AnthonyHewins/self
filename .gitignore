@@ -24,6 +24,7 @@
 
 /public/packs
 /public/packs-test
+/public/assets
 yarn-debug.log
 .yarn-integrity
 spec/examples.txt
