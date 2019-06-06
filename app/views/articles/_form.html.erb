@@ -3,7 +3,6 @@
 <%= form_with(model: article, local: true, id: dom_id(article), class: "ui form") do |form| %>  
   <div class="field">
     <%= form.label :title %>
-    *note: if you're using LaTeX, make sure you space out the $$ so it gets picked up by search engines!
     <div class="ui two column grid">
       <div class="column">
         <%= form.text_area :title, id: "title", class: "katex-input", "data-target" => "#katex-output-title" %>

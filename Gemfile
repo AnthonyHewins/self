@@ -31,6 +31,11 @@ gem 'jbuilder', '~> 2.5'
 gem 'jquery-rails'
 gem 'katex'
 
+group :development do
+  gem 'capistrano'
+  gem 'capistrano-rails'
+end
+
 group :development, :test do
   gem 'byebug'
 end
