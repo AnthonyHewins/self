@@ -42,7 +42,7 @@
         <%= form.text_area :body, class: "wysiwig katex-input", "data-target" => "#katex-output-body", id: 'body' %>
       </div>
       <div class="column" id="katex-output-body">
-        <%= render 'articles/katex_target', id: "katex-output-body", text: article.body %>
+        <%= render 'articles/katex_target', id: "katex-output-body", text: article.body, html: true %>
       </div>
     </div>
   </div>

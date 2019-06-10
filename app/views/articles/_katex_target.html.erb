@@ -5,5 +5,6 @@
   <br>
   E.g. <i>$$ a^2+b^2=c^2 $$</i> yields the Pythagorean Theorem.
 <% else %>
-  <%= parse_katex text %>
+  <% html = local_assigns.fetch :html, false %>
+  <%= parse_katex text, strip_tags: !html %>
 <% end %>

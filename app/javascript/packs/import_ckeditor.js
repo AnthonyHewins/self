@@ -1,39 +1,19 @@
-import CKEditorRenderer from "../src/CKEditorRenderer";
+import HtmlRenderer from "../src/HtmlRenderer";
 import parseKatex from "../src/KatexParser";
 
-var CKEDITORS = {};
-
 document.addEventListener("DOMContentLoaded", function() {    
-    const getRenderTarget = function(node) {
-        var renderTarget = document.querySelector(node.dataset.target);
-
-        if (renderTarget == null && isUsingKatex)
-            throw new Error("Need data-target to perform rendering");
-
-        return renderTarget;
-    }
-
-    // Create a listener that renders HTML as its written in CKEditor
-    var renderer = new CKEditorRenderer()
+    // Create a listener that renders HTML as its written in Html
+    var renderer = new HtmlRenderer()
     document.querySelectorAll('.wysiwig').forEach(node => {
         ClassicEditor.create(node)
             .then(instance => {
-                CKEDITORS[node.id] = instance;
-                return instance;
+                instance.model.document.on("change:data", renderer.ckeditorRenderer(node, instance))
             })
-            .then(instance => renderer.addEventListener(instance, node))
             .catch(error => console.error(error));
     });
 
     // Create a listener that renders HTML as its written in some regular HTML node
     document.querySelectorAll('.katex-input').forEach(node => {
-        if (!node.classList.contains("wysiwig")) {
-            const target = getRenderTarget(node);
-            node.addEventListener("input", function() {
-                target.innerHTML = parseKatex(node.value)
-            })
-        }
+        node.addEventListener("input", renderer.textareaRenderer(node))
     })
 });
-
-window.CKEDITORS = CKEDITORS;

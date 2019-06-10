@@ -1,5 +1,5 @@
 <h1 class="ui header">
-  <%= parse_katex @article.title %>
+  <%= parse_katex @article.title, strip_tags: true %>
 </h1>
 
 <div class="field">
@@ -31,7 +31,7 @@
 
 <div class="ui segment">
   <h1>tl;dr</h1>
-  <%= parse_katex @article.tldr %>
+  <%= parse_katex @article.tldr, strip_tags: true %>
   <% unless @article.tldr_image.attachment.nil? %>
     <%= image_tag(@article.tldr_image.attachment, style: "width: 100%; height: auto;") %>
   <% end %>
