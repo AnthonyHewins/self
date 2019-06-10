@@ -1,14 +1,28 @@
-import parseKatex from './KatexParser';
+import parseKatex from './katex_parser';
 
 class HtmlRenderer {
     ckeditorRenderer(node, instance) {
         const renderTarget = this._getRenderTarget(node)
-        return () => {renderTarget.innerHTML = parseKatex(instance.getData(), false)}
+
+        ClassicEditor.create(node).then(instance => {
+            instance.model.document.on(
+                "change:data",
+                () => {renderTarget.innerHTML = parseKatex(instance.getData(), false)}
+            )
+        })
+        .catch(error => console.error(error));
     }
 
-    textareaRenderer(node) {
-        const renderTarget = this._getRenderTarget(node);
-        return () => {renderTarget.innerHTML = parseKatex(node.value)}
+    textareaRenderer(node, katexNode) {
+        const renderTarget = this._getRenderTarget(node)
+
+        var lambda
+        if (katexNode)
+            lambda = () => {renderTarget.innerHTML = parseKatex(node.value)}
+        else
+            lambda = () => {renderTarget.innerHTML = node.value}
+                
+        node.addEventListener("input", lambda)
     }
 
     _getRenderTarget(node) {

@@ -16,5 +16,13 @@ FactoryBot.define do
     )}
     
     association :author, factory: :user
+
+    after :build do |article|
+      article.tldr_image.attach(
+        io: Tempfile.new,
+        filename: FFaker::Lorem.word,
+        content_type: 'image/jpeg'
+      )
+    end
   end
 end

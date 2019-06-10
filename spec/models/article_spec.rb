@@ -28,6 +28,44 @@ RSpec.describe Article, type: :model do
   it {should validate_presence_of :body}
   it {should validate_length_of(:body).is_at_least(Article::BODY_MIN)}
 
+  context ':tldr_image validation' do
+    before :each do
+      @file = Tempfile.new("toobig")
+    end
+
+    context "if size is greater than #{Article::TLDR_IMAGE_MAX} bytes" do
+      before :each do
+        @file.write "a" * (Article::TLDR_IMAGE_MAX + 1)
+        @file.rewind
+        @obj.tldr_image.attach(io: @file, filename: "x", content_type: "image/jpeg")
+      end
+      
+      it "purges the attachment" do
+        @obj.save
+        expect(@obj.tldr_image.attachment).to be nil
+      end
+      
+      it "adds an error" do
+        expect(@obj.save).to be false
+      end
+    end
+
+    context "if the content type isn't an image" do
+      before :each do        
+        @obj.tldr_image.attach(io: @file, filename: "x", content_type: "application/exe")
+      end
+
+      it "purges the attachment" do
+        @obj.save
+        expect(@obj.tldr_image.attachment).to be nil
+      end
+      
+      it "raises an error" do
+        expect(@obj.save).to be false
+      end
+    end
+  end
+  
   context 'before_save' do
     it ":tldr is nil'd out when it equals ''" do
       @obj.update tldr: ''
