@@ -1,4 +1,4 @@
-<h1 class="ui header">
+<h1>
   <%= parse_katex @article.title, strip_tags: true %>
 </h1>
 
@@ -6,8 +6,19 @@
   <%= author_label @article %>
 </div>
 
+<% if current_user&.has_permission? @article %>
+  <% if current_user != @article.owner && current_user.admin? %>
+    <% msg = "Edit article as admin" %>
+  <% else %>
+    <% msg = "Edit article" %>
+  <% end %>
+
+  <br>
+  <%= link_to msg, edit_article_path(@article) %>
+<% end %>
+
 <div class="ui message">
-  <div class="header">Tags</div>
+  <h2>Tags</h2>
   <p>
     <% if @article.tags.empty? %>
       <i>None</i>
@@ -19,18 +30,8 @@
   </p>
 </div>
 
-<% if current_user&.has_permission? @article %>
-  <% if current_user != @article.owner && current_user.admin? %>
-    <% msg = "Edit article as admin" %>
-  <% else %>
-    <% msg = "Edit article" %>
-  <% end %>
-
-  <%= link_to msg, edit_article_path(@article) %>
-<% end %>
-
 <div class="ui segment">
-  <h1>tl;dr</h1>
+  <h2>tldr</h2>
   <%= parse_katex @article.tldr, strip_tags: true %>
   <% unless @article.tldr_image.attachment.nil? %>
     <%= image_tag(@article.tldr_image.attachment, style: "width: 100%; height: auto;") %>

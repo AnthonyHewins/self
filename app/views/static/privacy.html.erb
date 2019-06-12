@@ -4,7 +4,86 @@
 
 <hr>
 
-<h1>What's collected?</h1>
-The only thing we collect is a few <a href="https://en.wikipedia.org/wiki/HTTP_cookie">cookies</a> that your browser hands back to us, and anything else you explicitly give us.
-We don't use that information for anything else except for site functionality. If you don't want us to do this, you can always block cookies, but some functionality is restricted/broken
-because it becomes impossible to identify who you are.
+<h2>TLDR</h2>
+
+<p>
+  We (sudo !!) collect the bare minimum data required to make the site work.
+  Your IP is not tracked, your user agent is not tracked, and cookies aren't
+  even required unless you're writing articles.
+</p>
+
+<p>
+  One of the benefits of collecting next to nothing is that we can't screw something
+  up that ends up affecting the end user.
+</p>
+
+<%##########################################################################%>
+<%# Readers %>
+<%##########################################################################%>
+
+<h3>For readers</h3>
+
+<h4>What's collected?</h4>
+
+<p>
+  The only thing we collect is a few <a href="https://en.wikipedia.org/wiki/HTTP_cookie">cookies</a>
+  and some technical data, such as your browser type, language preference, and the request timestamp.
+  Most of that data only exists temporarily, and it's infeasible to access it when the site is running
+  or down, whether it's the site admin or a hacker. However, we do collect potentially
+  personally-identifying information like your IP, but these are just for system logs and not stored
+  in a database.
+</p>
+
+<h4>Why is it collected?</h4>
+
+<p>
+  Site functionality and for troubleshooting when applicable.
+</p>
+
+<%##########################################################################%>
+<%# Writers %>
+<%##########################################################################%>
+
+<h3>For writers</h3>
+
+<h4>What's collected?</h4>
+
+<p>
+  See everything above, plus some of this as well:
+</p>
+
+<ul>
+  <li>
+    <strong>Personal data</strong>: information that has the possibility
+    of identifying you in itself or with other data. Examples are the username (handle)
+    and password, which currently is all we track. Personal data is 
+    defined in the General Data Protection Regulation.
+  </li>
+
+  <li>
+    <strong>Technical data</strong>: data that comes from a technical source, usually
+    stemming in some way from your browser. Technical data can snowball into personal
+    data because it can result in someone discovering your username/password.
+  </li>
+</ul>
+
+<p>
+  As a writer we need to be able to authenticate you because we only want experts
+  writing articles. A HTTP
+  <a href="https://en.wikipedia.org/wiki/HTTP_cookie">cookie</a> is how we do that.
+  It's something that's stored temporarily and then gets deleted whenever you logout
+  or after a certain period of time. It's not persisted beyond those two things.
+</p>
+
+<h4>Why is it collected?</h4>
+
+<p>
+  Site functionality, compliance with the law when applicable, and troubleshooting
+  when applicable. We feel morally obligated to not take the same path as many
+  other companies have, like Google or Facebook, in taking user data and brokering
+  it out.
+</p>
+
+<h3>Still have questions?</h3>
+
+<p>Refer to our <%=link_to "contact", contact_path %> page.</p>

@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   resources :articles, except: :destroy
 
   get 'contact' => 'static#contact'
+  get 'about' => 'static#about'
+  get 'faqs' => 'static#faqs'
   get 'privacy' => 'static#privacy'
   root 'static#index'
 end

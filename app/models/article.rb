@@ -4,7 +4,7 @@ class Article < PermissionModel
 
   TLDR_MAX = 1500
 
-  TLDR_IMAGE_MAX = 100_000
+  TLDR_IMAGE_MAX = 10_000_000
   
   BODY_MIN = 128
 

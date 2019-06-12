@@ -1,23 +1,32 @@
+<% %w(pink red orange yellow olive green teal blue violet purple brown grey black).each do |color| %>
+  <h1 class="<%=color%>">
+    Before contacting please read the <%=link_to "FAQ", faqs_path %>
+  </h1>
+<% end %>
+
+<br>
+
 <p>
   Last edited 2019-05-29
 </p>
 
 <hr>
 
-<h1>TL;DR</h1>
-Send mail here: <a href="mailto:">business-address@domain.com</a>. Read below for some possible FAQ to guide you.
+<h3>Bug reporting</h3>
 
-<h2>Like what you see? Want to contact an author?</h2>
-We have people of many different backgrounds writing content:
-computer scientists, mathematicians, cybersecurity analysts, finance experts, and many more.
+<% bug_reporting = mail_to "something@gmail.com" %>
+<% general_contact = bug_reporting %>
 
-If you want to get in contact with an author, use the contact link above. We will do our best to get you in contact.
-However, by the very nature of the site, authors can refuse to identify themselves (anonymous articles that you may have seen).
-This is not just a "hide the user" thing that isn't true behind the scenes; <strong>we literally keep the author column in the database null</strong>.
-We can ask who wrote the article that snagged your attention by asking around (which we will gladly do), but they can refuse to identify themselves if they choose to do so.
+<p>
+  Use the above contact and describe in as much detail as you can what happened and
+  the minimal steps to reproduce the bug. We will put it in our issue tracking software
+  and begin fixing it ASAP: <%= bug_reporting %>
+</p>
 
-<h2>Want to report a bug?</h2>
-Use the above contact and describe in as much detail as you can what happened and the minimal steps to reproduce the bug. We will put it in our issue tracking software and begin fixing it ASAP.
+<h3>General contact</h3>
 
-<h2>Have something else to say?</h2>
-Send an email our way with the above.
+<p>
+  Please read the <%= link_to "FAQ", faqs_path %> before emailing, or see our
+  <%= link_to "privacy policy", privacy_path %> if you have questions on that:
+  <%= general_contact %>
+</p>
