@@ -1,3 +1,5 @@
+require 'articles_tag'
+
 class Article < PermissionModel
   TITLE_MIN = 10
   TITLE_MAX = 1000
@@ -5,10 +7,13 @@ class Article < PermissionModel
   TLDR_MAX = 1500
 
   TLDR_IMAGE_MAX = 10_000_000
-  
+
   BODY_MIN = 128
 
-  has_and_belongs_to_many :tags
+  TAGS_MAX = 5
+
+  has_many :articles_tag
+  has_many :tags, through: :articles_tag
   belongs_to :author, class_name: "User", foreign_key: :author_id, optional: true
   has_one_attached :tldr_image
 
@@ -16,8 +21,8 @@ class Article < PermissionModel
 
   validates :tldr, length: {maximum: TLDR_MAX}
 
-  validate :check_image
-  
+  validate :check_image, :check_tags
+
   validates :body, presence: true, length: {minimum: BODY_MIN}
 
   before_save do |record|
@@ -39,14 +44,20 @@ class Article < PermissionModel
     if tldr_image.attached?
       if tldr_image.blob.byte_size > TLDR_IMAGE_MAX
         tldr_image.purge
-        errors[:tldr_image] << "TLDR image is too big of a file (#{TLDR_IMAGE_MAX} bytes)"
+        errors[:tldr_image] << "is too big of a file (#{TLDR_IMAGE_MAX} bytes)"
       elsif !tldr_image.blob.content_type.starts_with?('image/')
         tldr_image.purge
-        errors[:tldr_image] << 'TLDR image is not the right content type (must be image)'
+        errors[:tldr_image] << 'is not the right content type (must be image)'
       end 
     end
   end
-  
+
+  def check_tags
+    count = tags.count
+    errors[:tags] << "have a maximum of #{TAGS_MAX} (submitted #{count})" if count > 5
+    errors[:tags] << "has duplicates" if tags.map(&:id).uniq.count < count
+  end
+
   def self.search_by_tags(tags, query=nil)
     case tags
     when Array, ActiveRecord::Relation

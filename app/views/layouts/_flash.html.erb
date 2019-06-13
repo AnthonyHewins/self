@@ -1,7 +1,7 @@
 <% flash.each do |type, message| %>
   <div class="ui <%= type %> message" id="flash">
     <% if message.instance_of? ActiveModel::Errors %>
-      Error:
+      Error while trying to save:
       <ul>
         <% message.full_messages.each do |message| %>
           <%= content_tag :li, message %>

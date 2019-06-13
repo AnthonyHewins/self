@@ -14,7 +14,8 @@ RSpec.describe Article, type: :model do
     end
   end
 
-  it {should have_and_belong_to_many(:tags)}
+  it {should have_many(:tags).through(:articles_tag)}
+  it {should have_many(:articles_tag)}
 
   it {should belong_to(:author).class_name("User").with_foreign_key(:author_id).optional}
   
@@ -63,6 +64,19 @@ RSpec.describe Article, type: :model do
       it "raises an error" do
         expect(@obj.save).to be false
       end
+    end
+  end
+
+  context ':tags validation' do
+    it 'adds an error if the article has more than 5 tags' do
+      @obj.tags = create_list(:tag, 6)
+      expect(@obj.save).to be false
+    end
+
+    it 'adds an error if duplicate tags are found' do
+      tag = create :tag
+      @obj.tags = [tag,tag]
+      expect(@obj.save).to be false
     end
   end
   
