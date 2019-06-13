@@ -25,34 +25,27 @@ gem 'webpacker', git: "https://github.com/rails/webpacker.git"
 
 # Views
 gem 'semantic-ui-sass'
-gem 'gravtastic'
 gem 'turbolinks', '~> 5'
-gem 'jbuilder', '~> 2.5'
 gem 'jquery-rails'
 gem 'katex'
 
 group :development do
   gem 'capistrano'
   gem 'capistrano-rails'
+  gem 'web-console', '>= 3.3.0'
+end
+
+group :test do
+  gem 'rspec-rails'
+  gem 'database_cleaner'
+  gem 'factory_bot'
+  gem 'ffaker'
+  gem 'shoulda-matchers'
+  gem 'capybara', '~> 2.13'
 end
 
 group :development, :test do
   gem 'byebug'
-end
-
-group :test do
-  gem 'capybara', '~> 2.13'
-  gem 'selenium-webdriver'
-  gem 'rspec-rails'
-  gem 'factory_bot'
-  gem 'ffaker'
-  gem 'shoulda-matchers'
-  gem 'rails-controller-testing'
-  gem 'database_cleaner'
-end
-
-group :development do
-  gem 'web-console', '>= 3.3.0'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
