@@ -4,8 +4,8 @@
 
 ActiveRecord::Base.logger = Logger.new STDOUT
 
-unless User.exists?(handle: "aahewins")
-  User.create!(handle: "aahewins", password: "a!!!!!")
+unless User.exists?(handle: "admin")
+  User.create!(handle: "admin", password: "a!!!!!")
 end
 
 upsert = lambda do |name, css|

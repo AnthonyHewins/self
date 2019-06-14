@@ -8,14 +8,34 @@
 
 <p>
   We (sudo !!) collect the bare minimum data required to make the site work.
-  Your IP is not tracked, your user agent is not tracked, and cookies aren't
-  even required unless you're writing articles.
+  We don't use anything we don't have to, and we delete as much as we can
+  of it when we're done using it.
 </p>
 
 <p>
   One of the benefits of collecting next to nothing is that we can't screw something
   up that ends up affecting the end user.
 </p>
+
+<h2>Some informal definitions of legal terms</h2>
+
+<ul>
+  <li>
+    <strong>Personal data</strong>: information that has the possibility
+    of identifying you in itself or with other data. Examples are the username (handle)
+    and password, which currently is all we track. Personal data is 
+    defined in the General Data Protection Regulation (GDPR), and we try to collect
+    as little of this information as possible.
+  </li>
+
+  <li>
+    <strong>Technical data</strong>: data that comes from a technical source, usually
+    stemming in some way from your browser. Technical data can snowball into personal
+    data because it can result in someone discovering Personal data. We also try to
+    collect as little of this information as possible, because it can result in the
+    above being derived from it.
+  </li>
+</ul>
 
 <%##########################################################################%>
 <%# Readers %>
@@ -26,18 +46,16 @@
 <h4>What's collected?</h4>
 
 <p>
-  The only thing we collect is a few <a href="https://en.wikipedia.org/wiki/HTTP_cookie">cookies</a>
-  and some technical data, such as your browser type, language preference, and the request timestamp.
-  Most of that data only exists temporarily, and it's infeasible to access it when the site is running
-  or down, whether it's the site admin or a hacker. However, we do collect potentially
-  personally-identifying information like your IP, but these are just for system logs and not stored
-  in a database.
+  There's a lot of basic boilerplate things collected by any modern website, for example
+  internet <a href="https://en.wikipedia.org/wiki/HTTP_cookie">cookies</a>, the IP address,
+  or the timestamp of when you visit a page.
 </p>
 
 <h4>Why is it collected?</h4>
 
 <p>
-  Site functionality and for troubleshooting when applicable.
+  Site functionality and for troubleshooting when applicable. None of it is sold, and when
+  it's possible to delete any of this data, we will.
 </p>
 
 <%##########################################################################%>
@@ -49,30 +67,8 @@
 <h4>What's collected?</h4>
 
 <p>
-  See everything above, plus some of this as well:
-</p>
-
-<ul>
-  <li>
-    <strong>Personal data</strong>: information that has the possibility
-    of identifying you in itself or with other data. Examples are the username (handle)
-    and password, which currently is all we track. Personal data is 
-    defined in the General Data Protection Regulation.
-  </li>
-
-  <li>
-    <strong>Technical data</strong>: data that comes from a technical source, usually
-    stemming in some way from your browser. Technical data can snowball into personal
-    data because it can result in someone discovering your username/password.
-  </li>
-</ul>
-
-<p>
-  As a writer we need to be able to authenticate you because we only want experts
-  writing articles. A HTTP
-  <a href="https://en.wikipedia.org/wiki/HTTP_cookie">cookie</a> is how we do that.
-  It's something that's stored temporarily and then gets deleted whenever you logout
-  or after a certain period of time. It's not persisted beyond those two things.
+  The exact some stuff above, except also a username and password. This has a
+  possibility of revealing personal information, which is why we safeguard it closely.
 </p>
 
 <h4>Why is it collected?</h4>
@@ -82,6 +78,46 @@
   when applicable. We feel morally obligated to not take the same path as many
   other companies have, like Google or Facebook, in taking user data and brokering
   it out.
+</p>
+
+<h3>Cookie usage</h3>
+
+<p>
+  As mentioned above, cookies are only in place because they are a necessary
+  authentication method. If you're someone writing for the site, you have to
+  enable cookies in order to write, because otherwise we can't be sure who is
+  the author of any given article.
+</p>
+
+<p>
+  However, if you're just a reader, cookies are not required but the site
+  will ask your browser for them anyways because it can't tell the difference
+  between a logged in user and a non-logged in user until after visiting the site.
+  You can disable cookies if you want and it will have no impact on the site.
+</p>
+
+<h3>Locking down your data</h3>
+
+<p>
+  Sudo !! follows industry best-practices and, whenever possible, tries to
+  <i>not</i> collect information because it's in both our best interest, and
+  for every user on the site to never have anything bad happen to their
+  information.  
+</p>
+
+<p>
+  In the event of any breach that touches Personal Information, we will act
+  promptly to mitigate the breach and notify all affected users ASAP.
+</p>
+
+<p>
+  All forms of communication take place over HTTPS using the latest TLS version.
+  When sensitive data is stored, it's encrypted using industry standards. We also
+  enforce things like passwords to be strong to make bruteforce attacks more difficult.
+</p>
+
+<p>
+  It should go without saying that no transit protocol or storage method is 100% secure.
 </p>
 
 <h3>Still have questions?</h3>
