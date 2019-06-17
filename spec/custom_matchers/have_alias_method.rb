@@ -3,7 +3,7 @@ RSpec::Matchers.define :have_alias_method do |new_alias, old_method|
     expect(obj.send new_alias).to eq obj.send(old_method)
   end
 
-  failure_message do |object_instance|
+  failure_message do |_|
     "expected ##{new_alias} to return the same value as ##{old_method}"
   end
 

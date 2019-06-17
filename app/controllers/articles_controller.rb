@@ -2,15 +2,15 @@ require Rails.root.join 'lib/assets/permission'
 
 class ArticlesController < ApplicationController
   include Permission
-  before_action :set_and_authorize, only: %i(edit update destroy)
-  before_action :authorize, only: %i(new create)
+  before_action :set_and_authorize, only: %i[edit update destroy]
+  before_action :authorize, only: %i[new create]
   before_action :set_article, only: :show
 
   def index
     @articles = Article.search(
       params[:q],
       tags: find_tags(params[:tags]),
-      author: find_author(params[:author]),
+      author: find_author(params[:author])
     ).paginate(page: params[:page], per_page: 10)
   end
 
@@ -53,7 +53,7 @@ class ArticlesController < ApplicationController
 
   def article_params
     hash = params.require(:article).permit :title, :body, :tldr, :tldr_image, :anonymous
-    hash[:author] = hash.delete(:anonymous) == "1" ? nil : current_user
+    hash[:author] = hash.delete(:anonymous) == '1' ? nil : current_user
     hash.merge tags: find_tags(params[:tags])
   end
 end

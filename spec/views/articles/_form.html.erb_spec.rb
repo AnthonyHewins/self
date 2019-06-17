@@ -16,7 +16,7 @@ RSpec.describe "articles/_form", type: :view do
     end
   end
 
-  %i(title tldr body).each do |sym|
+  %i[title tldr body].each do |sym|
     it "has div#katex-output that renders :#{sym}" do
       expect(rendered).to include @article.title
     end

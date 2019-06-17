@@ -10,7 +10,7 @@ RSpec.describe Tag, type: :model do
   end
 
   context 'before_save' do
-    %i(css name).each do |attr|
+    %i[css name].each do |attr|
       it "downcases #{attr}" do
         @obj.update attr => "UPCASE"
         expect(@obj.send attr).to eq "upcase"

@@ -10,7 +10,7 @@ end
 
 upsert = lambda do |name, css|
   tag = Tag.find_or_create_by(name: name)
-  tag.update!(name: name, css: "blue calculator icon")
+  tag.update!(name: name, css: css)
 end
 
 upsert.call "mathematics",                  "blue calculator icon"

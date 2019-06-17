@@ -33,6 +33,8 @@ group :development do
   gem 'capistrano'
   gem 'capistrano-rails'
   gem 'web-console', '>= 3.3.0'
+  gem 'rubocop', require: false
+  gem 'bundler-audit'
 end
 
 group :test do
@@ -48,4 +50,4 @@ group :development, :test do
   gem 'byebug'
 end
 
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]

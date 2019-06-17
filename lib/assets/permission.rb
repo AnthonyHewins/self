@@ -1,5 +1,5 @@
 module Permission
-  class AccessDenied < Exception; end
+  class AccessDenied < RuntimeError; end
 
   def set_and_authorize
     raise AccessDenied if current_user.nil?

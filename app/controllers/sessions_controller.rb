@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
-  LOGIN_PROMPT = "Logged in successfully."
-  INCORRECT_COMBINATION_PROMPT = "Incorrect handle/password combination."
+  LOGIN_PROMPT = 'Logged in successfully.'.freeze
+  INCORRECT_COMBINATION_PROMPT = 'Incorrect handle/password combination.'.freeze
   
   def new
   end
@@ -21,9 +21,6 @@ class SessionsController < ApplicationController
   end
 
   private
-  def find_user_by_params
-  end
-
   def login(user)
     session[:user_id] = user.id
     flash[:info] = LOGIN_PROMPT

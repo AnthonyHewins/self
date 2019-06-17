@@ -86,7 +86,7 @@ RSpec.describe Article, type: :model do
       expect(@obj.tldr).to be nil
     end
     
-    %i(title tldr body).each do |sym|
+    %i[title tldr body].each do |sym|
       it "strips :#{sym} before save" do
         old = @obj.send sym
         @obj.update(sym => "   #{old}   ")
@@ -97,7 +97,7 @@ RSpec.describe Article, type: :model do
 
   context '::search(q, tags:, author:)' do
     context 'omnisearch' do
-      %i(title tldr body).each do |sym|
+      %i[title tldr body].each do |sym|
         it "finds based on :#{sym}, case-insensitively" do
           expect(Article.search @obj.send(sym)).to include(@obj)
         end
