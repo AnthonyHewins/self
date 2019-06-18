@@ -33,13 +33,13 @@ class Article < PermissionModel
     record.tldr = record.tldr.blank? ? nil : record.tldr.strip
   end
 
+  alias_method :owner, :author
+
   def self.search(q=nil, tags: nil, author: nil)
     query = search_by_tags tags
     query = search_by_author(query, author)
     q.blank? ? query : omnisearch(query, q)
   end
-
-  alias_method :owner, :author
 
   private
   def check_image
@@ -69,7 +69,7 @@ class Article < PermissionModel
 
   class << self
     private
-    def self.search_by_tags(tags, query=nil)
+    def search_by_tags(tags, query=nil)
       case tags
       when Array, ActiveRecord::Relation
         query = join
@@ -84,15 +84,15 @@ class Article < PermissionModel
       end
     end
 
-    def self.join
+    def join
       Article.includes(:tags).left_outer_joins(:author)
     end
     
-    def self.omnisearch(query_chain, q)
+    def omnisearch(query_chain, q)
       query_chain.where "title ilike :q or tldr ilike :q or body ilike :q", q: "%#{q}%"
     end
 
-    def self.search_by_author(query_chain, author)
+    def search_by_author(query_chain, author)
       case author
       when User
         query_chain.where author: author
