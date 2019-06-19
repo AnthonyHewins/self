@@ -21,7 +21,6 @@ gem 'will_paginate'
 
 # Assets
 gem 'uglifier', '>= 1.3.0'
-gem 'webpacker', git: "https://github.com/rails/webpacker.git"
 
 # Views
 gem 'semantic-ui-sass'

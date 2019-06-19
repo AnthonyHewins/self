@@ -65,5 +65,5 @@
 
 <%# Prevent the textarea from becoming a JS object to make Specs simpler %>
 <% unless Rails.env.test? %>
-  <%= javascript_pack_tag "import_html_renderers" %>
+  <%= javascript_include_tag "import_html_renderers" %>
 <% end %>
