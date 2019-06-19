@@ -41,7 +41,7 @@ class User < PermissionModel
     if handle.nil?
       errors.add(:handle, "Handle cannot be null")
     else
-      errors.add(:handle, "Anonymous is a reserved handle") if handle.downcase! == "anonymous"
+      errors.add(:handle, "Anonymous is a reserved handle") if handle.downcase == "anonymous"
     end
   end
 end
