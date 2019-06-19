@@ -9,8 +9,13 @@ unless User.exists?(handle: "admin")
 end
 
 upsert = lambda do |name, css|
-  tag = Tag.find_or_create_by(name: name)
-  tag.update!(name: name, css: css)
+  tag = Tag.find_by(name: name)
+
+  if tag.nil?
+    Tag.create!(name: name, css: css)
+  else
+    tag.update!(name: name, css: css)
+  end
 end
 
 upsert.call "mathematics",                  "blue calculator icon"
