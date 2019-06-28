@@ -20,5 +20,5 @@ test:
 production:
   <<: *default
   username: self
-  password: "test"
+  password: <%= ENV["PRODUCTION_PASSWORD"] %>
   database: self_production
