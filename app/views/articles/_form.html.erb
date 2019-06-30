@@ -8,7 +8,7 @@
         <%= form.text_area :title, id: "title", class: "katex-input", "data-target" => "#katex-output-title" %>
       </div>
       <div class="column" id="katex-output-title">
-        <%= render 'articles/katex_target', text: article&.title %>
+        <%= render 'articles/katex_target', text: article.get_title %>
       </div>
     </div>
   </div>
@@ -25,7 +25,7 @@
         <%= form.text_area :tldr, id: 'tldr', class: "katex-input", "data-target" => "#katex-output-tldr" %>
       </div>
       <div class="column" id="katex-output-tldr">
-        <%= render 'articles/katex_target', id: "katex-output-tldr", text: article.tldr %>
+        <%= render 'articles/katex_target', id: "katex-output-tldr", text: article.get_tldr %>
       </div>
     </div>
   </div>
@@ -42,7 +42,7 @@
         <%= form.text_area :body, class: "wysiwig katex-input", "data-target" => "#katex-output-body", id: 'body' %>
       </div>
       <div class="column" id="katex-output-body">
-        <%= render 'articles/katex_target', id: "katex-output-body", text: article.body, html: true %>
+        <%= render 'articles/katex_target', id: "katex-output-body", text: article.get_body, html: true %>
       </div>
     </div>
   </div>

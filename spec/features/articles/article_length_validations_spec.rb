@@ -60,7 +60,7 @@ RSpec.describe 'Article length validations', type: :feature do
 
   context 'only filling in tldr' do
     it 'raises all errors when tldr is over 160 characters' do
-      @set_tldr.call 'a' * (Article::TLDR_MAX + 1)
+      @set_tldr.call 'a' * (ArticleValidator::TLDR_MAX + 1)
       @expect.call @tldr_long, @title_short, @title_blank, @body_short
     end
   end

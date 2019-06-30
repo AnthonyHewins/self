@@ -1,18 +1,27 @@
-<% query = params[:q] %>
-
 <div class="ui container">
   <%= render 'articles/index/header' %>
 
-  <% if query.blank? %>
-    <h1>Most recent</h1>
-  <% else %>
-    <% query = query.length > 40 ? query[0..39] + '...' : query %>
-    <%= content_tag :h1, "Search results for '#{query}'" %>
-  <% end %>
-
   <div class="ui stackable items">
     <% @articles.each do |article| %>
-      <%= render 'articles/index/article', article: article %>
+      <div class="item" id="<%= dom_id(article) %>">
+
+        <div class="ui tiny image">
+          <%= image_tag(article.tldr_image.attachment || "empty_set.png") %>
+        </div>
+
+        <div class="content">
+          <%= link_to article.get_title, article, class: "header" %>
+
+          <div class="meta">
+            <%= author_label article %>
+            <%= render partial: 'tags/tag', collection: article.tags %>
+          </div>
+
+          <div class="description">
+            <%= article.get_tldr %>
+          </div>
+        </div>
+      </div>
     <% end %>
   </div>
 

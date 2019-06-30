@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'katex'
 require_relative '../custom_matchers/have_alias_method'
 
 RSpec.describe Article, type: :model do
@@ -9,7 +10,7 @@ RSpec.describe Article, type: :model do
   context "constants" do
     [[:TITLE_MIN, 10], [:TITLE_MAX, 1000], [:TLDR_MAX, 1500], [:BODY_MIN, 128]].each do |name, val|
       it "#{name} equals #{val}" do
-        expect(Article.const_get name).to eq val
+        expect(ArticleValidator.const_get name).to eq val
       end
     end
   end
@@ -21,22 +22,22 @@ RSpec.describe Article, type: :model do
   
   it {should validate_presence_of :title}
   it {should validate_length_of(:title)
-               .is_at_least(Article::TITLE_MIN)
-               .is_at_most(Article::TITLE_MAX)}
+              .is_at_least(ArticleValidator::TITLE_MIN)
+              .is_at_most(ArticleValidator::TITLE_MAX)}
 
-  it {should validate_length_of(:tldr).is_at_most Article::TLDR_MAX}
+  it {should validate_length_of(:tldr).is_at_most ArticleValidator::TLDR_MAX}
 
   it {should validate_presence_of :body}
-  it {should validate_length_of(:body).is_at_least(Article::BODY_MIN)}
+  it {should validate_length_of(:body).is_at_least(ArticleValidator::BODY_MIN)}
 
   context ':tldr_image validation' do
     before :each do
       @file = Tempfile.new("toobig")
     end
 
-    context "if size is greater than #{Article::TLDR_IMAGE_MAX} bytes" do
+    context "if size is greater than #{ArticleValidator::TLDR_IMAGE_MAX} bytes" do
       before :each do
-        @file.write "a" * (Article::TLDR_IMAGE_MAX + 1)
+        @file.write "a" * (ArticleValidator::TLDR_IMAGE_MAX + 1)
         @file.rewind
         @obj.tldr_image.attach(io: @file, filename: "x", content_type: "image/jpeg")
       end
@@ -81,16 +82,48 @@ RSpec.describe Article, type: :model do
   end
   
   context 'before_save' do
-    it ":tldr is nil'd out when it equals ''" do
+    it ":tldr is nil'd out when its blank" do
       @obj.update tldr: ''
       expect(@obj.tldr).to be nil
     end
-    
+
     %i[title tldr body].each do |sym|
       it "strips :#{sym} before save" do
         old = @obj.send sym
         @obj.update(sym => "   #{old}   ")
         expect(@obj.send(sym)).to eq old
+      end
+    end
+
+    %i[title tldr body].each do |sym|
+      it "if no katex is detected in #{sym} (ie, no '$$' delimiters), keeps :#{sym}_katex nil" do
+        @obj.update sym => "No katex"
+        expect(@obj.reload.send "#{sym}_katex").to be nil
+      end
+
+      it "if katex is detected in #{sym}, parses it and places it in :#{sym}_katex" do
+        katex = "a^2"
+        @obj.update sym => "Buffer for length validations #{FFaker::Lorem.words(20)} $$#{katex}$$"
+        expect(@obj.reload.send "#{sym}_katex").to include Katex.render(katex)
+      end
+    end
+  end
+
+  %i[title tldr].each do |sym|
+    context "#get_#{sym}" do
+      before :each do
+        @word = FFaker::Lorem.word
+      end
+      
+      it "returns :#{sym} if blank" do
+        @obj.send "#{sym}=", @word
+        @obj.send "#{sym}_katex=", nil
+        expect(@obj.send "get_#{sym}").to eq @word
+      end
+
+      it "returns :#{sym}_katex.html_safe if :#{sym}_katex not blank" do
+        @obj.send "#{sym}_katex=", @word
+        expect(@obj.send "get_#{sym}").to eq @word.html_safe
       end
     end
   end

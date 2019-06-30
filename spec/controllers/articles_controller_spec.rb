@@ -3,9 +3,9 @@ require 'ffaker'
 
 RSpec.describe ArticlesController, type: :controller do
   let(:valid_attributes) {{
-    title: FFaker::HipsterIpsum.characters(Article::TITLE_MAX),
-    body: FFaker::HipsterIpsum.characters(Article::BODY_MIN),
-    tldr: FFaker::HipsterIpsum.characters(Article::TLDR_MAX),
+    title: FFaker::HipsterIpsum.characters(ArticleValidator::TITLE_MAX),
+    body: FFaker::HipsterIpsum.characters(ArticleValidator::BODY_MIN),
+    tldr: FFaker::HipsterIpsum.characters(ArticleValidator::TLDR_MAX),
   }}
 
   let(:invalid_attributes) {{

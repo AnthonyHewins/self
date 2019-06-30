@@ -4,15 +4,15 @@ FactoryBot.define do
   factory :article do
 
     title { FFaker::BaconIpsum.characters(
-      rand(Article::TITLE_MAX - Article::TITLE_MIN) + Article::TITLE_MIN)
+      rand(ArticleValidator::TITLE_MAX - ArticleValidator::TITLE_MIN) + ArticleValidator::TITLE_MIN)
     }
     
     tldr  { FFaker::BaconIpsum.characters(
-      rand(Article::TLDR_MAX)
+      rand(ArticleValidator::TLDR_MAX)
     )}
 
     body  { FFaker::BaconIpsum.characters(
-      rand(100) + Article::BODY_MIN
+      rand(100) + ArticleValidator::BODY_MIN
     )}
     
     association :author, factory: :user

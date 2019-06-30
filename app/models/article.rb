@@ -1,70 +1,48 @@
 require 'articles_tag'
+require 'article_validator'
+require 'concerns/katex_parser'
 
 class Article < PermissionModel
-  TITLE_MIN = 10
-  TITLE_MAX = 1000
-
-  TLDR_MAX = 1500
-
-  TLDR_IMAGE_MAX = 10_000_000
-  
-  TLDR_IMAGE_BAD_TYPE = 'is not the right content type (must be image)'
-  
-  BODY_MIN = 128
-
-  TAGS_MAX = 5
+  include ActiveModel::Validations
+  include ActionView::Helpers::SanitizeHelper
 
   has_many :articles_tag
   has_many :tags, through: :articles_tag
   belongs_to :author, class_name: "User", foreign_key: :author_id, optional: true
   has_one_attached :tldr_image
 
-  validates :title, presence: true, length: {minimum: TITLE_MIN, maximum: TITLE_MAX}
+  validates :title, presence: true, length: {minimum: ArticleValidator::TITLE_MIN,
+                                             maximum: ArticleValidator::TITLE_MAX}
 
-  validates :tldr, length: {maximum: TLDR_MAX}
+  validates :tldr, length: {maximum: ArticleValidator::TLDR_MAX}
 
-  validate :check_image, :check_tags
+  validates :body, presence: true, length: {minimum: ArticleValidator::BODY_MIN}
 
-  validates :body, presence: true, length: {minimum: BODY_MIN}
-
-  before_save do |record|
-    record.title.strip!
-    record.body.strip!
-    record.tldr = record.tldr.blank? ? nil : record.tldr.strip
-  end
+  validates_with ArticleValidator
+  
+  before_save KatexParser.instance
 
   alias_method :owner, :author
 
+  def get_title
+    return title_katex.html_safe unless title_katex.blank?
+    strip_tags(title)
+  end
+  
+  def get_tldr
+    return tldr_katex.html_safe unless tldr_katex.blank?
+    strip_tags(tldr)
+  end
+  
+  def get_body
+    return body_katex.html_safe unless body_katex.nil?
+    body&.html_safe
+  end
+  
   def self.search(q=nil, tags: nil, author: nil)
     query = search_by_tags tags
     query = search_by_author(query, author)
     q.blank? ? query : omnisearch(query, q)
-  end
-
-  private
-  def check_image
-    return unless tldr_image.attached?
-
-    size = tldr_image.blob.byte_size
-    content_type = tldr_image.blob.content_type
-    
-    if size > TLDR_IMAGE_MAX
-      append_tldr_image_error "is #{size} bytes, max is #{TLDR_IMAGE_MAX}"
-    end
-    unless content_type.starts_with?('image/')
-      append_tldr_image_error "must be image, uploaded file with type #{content_type}"
-    end
-  end
-
-  def append_tldr_image_error(str)
-    tldr_image.purge
-    errors[:tldr_image] << str
-  end
-  
-  def check_tags
-    count = tags.count
-    errors[:tags] << "have a maximum of #{TAGS_MAX} (submitted #{count})" if count > 5
-    errors[:tags] << "has duplicates" if tags.map(&:id).uniq.count < count
   end
 
   class << self

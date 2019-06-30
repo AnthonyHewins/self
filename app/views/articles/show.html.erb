@@ -1,5 +1,5 @@
 <h1>
-  <%= parse_katex @article.title, strip_tags: true %>
+  <%= @article.get_title %>
 </h1>
 
 <div class="field">
@@ -30,12 +30,17 @@
   </p>
 </div>
 
-<div class="ui segment">
-  <h2>tldr</h2>
-  <%= parse_katex @article.tldr, strip_tags: true %>
-  <% unless @article.tldr_image.attachment.nil? %>
-    <%= image_tag(@article.tldr_image.attachment, style: "width: 100%; height: auto;") %>
-  <% end %>
-</div>
+<% tldr = @article.get_tldr %>
+<% tldr_image = @article.tldr_image.attachment %>
 
-<%= parse_katex @article.body %>
+<% unless tldr.nil? && tldr_image.nil? %>
+  <div class="ui segment">
+    <h2>tldr</h2>
+    <%= tldr %>
+    <% unless tldr_image.nil? %>
+      <%= image_tag(@article.tldr_image.attachment, style: "width: 100%; height: auto;") %>
+    <% end %>
+  </div>
+<% end %>
+
+<%= @article.get_body %>

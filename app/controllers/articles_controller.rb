@@ -2,16 +2,13 @@ require Rails.root.join 'lib/assets/permission'
 
 class ArticlesController < ApplicationController
   include Permission
+
   before_action :set_and_authorize, only: %i[edit update destroy]
   before_action :authorize, only: %i[new create]
   before_action :set_article, only: :show
 
   def index
-    @articles = Article.search(
-      params[:q],
-      tags: find_tags(params[:tags]),
-      author: find_author(params[:author])
-    ).paginate(page: params[:page], per_page: 10)
+    @articles = find_articles.paginate(page: params[:page], per_page: 10)
   end
 
   def new
@@ -39,8 +36,16 @@ class ArticlesController < ApplicationController
   end
 
   private
+  def find_articles
+    Article.search(
+      params[:q],
+      tags: find_tags(params[:tags]),
+      author: find_author(params[:author])
+    ).with_attached_tldr_image.includes(:tags, :author)
+  end
+
   def find_tags(tags)
-    tags.blank? ? [] : tags.split(',').map {|i| Tag.find i}
+    tags.blank? ? [] : Tag.find(tags.split(','))
   end
 
   def find_author(author)
