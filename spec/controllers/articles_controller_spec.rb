@@ -46,6 +46,33 @@ RSpec.describe ArticlesController, type: :controller do
     end
   end
 
+  describe "DELETE #destroy" do
+    context "raises Permission::AccessDenied" do
+      it "when you're not a logged in user" do
+        expect {
+          delete :destroy, params: {id: create(:article).to_param}
+        }.to raise_error Permission::AccessDenied
+      end
+
+      it "if you aren't the owner or an admin" do
+        expect {
+          delete :destroy, params: {id: create(:article).to_param}, session: valid_session
+        }.to raise_error Permission::AccessDenied
+      end
+    end
+
+    it "destroys the article and redirects to articles_path if you're an admin" do
+      delete :destroy, params: {id: create(:article).to_param}, session: valid_admin_session
+      expect(response).to redirect_to(articles_path)
+    end
+
+    it "destroys the article and redirects to articles_path if you're the owner" do
+      user = create :user
+      delete :destroy, params: {id: create(:article, author: user).to_param}, session: {user_id: user.id}
+      expect(response).to redirect_to(articles_path)
+    end
+  end
+
   describe "GET #edit" do
     context "raises Permission::AccessDenied" do
       it "when you're not a logged in user" do

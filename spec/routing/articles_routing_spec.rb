@@ -31,7 +31,7 @@ RSpec.describe ArticlesController, type: :routing do
     end
 
     it "routes to #destroy" do
-      expect(:delete => "/articles/1").to_not route_to("articles#destroy", :id => "1")
+      expect(:delete => "/articles/1").to route_to("articles#destroy", :id => "1")
     end
   end
 end

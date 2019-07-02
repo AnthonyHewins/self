@@ -18,13 +18,17 @@
 
 <% if current_user&.has_permission? @article %>
   <% if current_user != @article.owner && current_user.admin? %>
-    <% msg = "Edit article as admin" %>
+    <% edit_msg = "Edit article as admin" %>
+    <% delete_msg = "Delete article as admin" %>
   <% else %>
-    <% msg = "Edit article" %>
+    <% edit_msg = "Edit article" %>
+    <% delete_msg = "Delete article" %>
   <% end %>
 
   <br>
-  <%= link_to msg, edit_article_path(@article) %>
+  <%= link_to edit_msg, edit_article_path(@article) %>
+  <br>
+  <%= link_to delete_msg, article_path(@article), method: :delete %>
 <% end %>
 
 <div class="ui message">

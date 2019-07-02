@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   get "login" => "sessions#new"
   post "login" => "sessions#create"
 
-  resources :articles, except: :destroy
+  resources :articles
 
   get 'contact' => 'static#contact'
   get 'about' => 'static#about'
