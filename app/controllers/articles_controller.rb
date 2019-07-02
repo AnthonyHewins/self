@@ -41,7 +41,9 @@ class ArticlesController < ApplicationController
       params[:q],
       tags: find_tags(params[:tags]),
       author: find_author(params[:author])
-    ).with_attached_tldr_image.includes(:tags, :author)
+    ).with_attached_tldr_image
+      .includes(:tags, :author)
+      .order(updated_at: :desc)
   end
 
   def find_tags(tags)

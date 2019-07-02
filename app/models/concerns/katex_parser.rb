@@ -20,50 +20,45 @@ class KatexParser
 
   private
   def remove_whitespace_and_parse(record, dictionary)
-    dictionary[:no_html].each {|field| strict_cleanup_and_parse record, field}
-    dictionary[:html].each {|field| html_cleanup_and_parse record, field}
+    dictionary[:no_html].each {|field| before_save_tasks record, field, true}
+    dictionary[:html].each {|field| before_save_tasks record, field, false}
   end
 
-  def strict_cleanup_and_parse(record, field)
-    tokens = trim_and_tokenize record, field
-    return if tokens.nil?
-    strict_parser tokens, field, record
+  def before_save_tasks(record, field, strict)
+    record.send "#{field}=", whitespace_cleanup(record.send field)
+    return if record.send(field).nil?
+    parse_katex record, field, strict
   end
 
-  def html_cleanup_and_parse(record, field)
-    tokens = trim_and_tokenize record, field
-    return if tokens.nil?
-    html_parser tokens, field, record
+  def whitespace_cleanup(val)
+    return nil if val.blank?
+    val.strip
   end
 
-  def trim_and_tokenize(record, field)
-    return nil if just_whitespace?(record, field)
+  def parse_katex(record, field, strict)
     tokens = record.send(field).split(KATEX_DELIMITER)
-    tokens.length == 1 ? nil : tokens
+    return if tokens.length == 1
+    render(record, field, tokens, strict)
   end
-  
-  def just_whitespace?(record, field)
-    val = record.send(field)
-    if val.blank?
-      record.send "#{field}=", nil
-      return true
-    else
-      record.send "#{field}=", val.strip
-      return false
+
+  def render(record, field, tokens, strict)
+    begin
+      strict ? strict_parse(tokens) : html_parse(tokens)
+      record.send("#{field}_katex=", tokens.join(''))
+    rescue ExecJS::ProgramError
+      record.errors.add(field, "Katex could not be parsed, check your $$ usage")
     end
   end
 
-  def html_parser(tokens, field, record)
-    tokens.each_with_index do |text, i|
-      tokens[i] = Katex.render(text) if i.odd?
-    end
-    record.send "#{field}_katex=", tokens.join('')
-  end
-
-  def strict_parser(tokens, field, record)
+  def strict_parse(tokens)
     tokens.each_with_index do |text, i|
       tokens[i] = i.odd? ? Katex.render(text) : strip_tags(text)
     end
-    record.send "#{field}_katex=", tokens.join('')
+  end
+
+  def html_parse(tokens)
+    tokens.each_with_index do |text, i|
+      tokens[i] = Katex.render(text) if i.odd?
+    end
   end
 end

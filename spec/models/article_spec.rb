@@ -106,6 +106,11 @@ RSpec.describe Article, type: :model do
         @obj.update sym => "Buffer for length validations #{FFaker::Lorem.words(20)} $$#{katex}$$"
         expect(@obj.reload.send "#{sym}_katex").to include Katex.render(katex)
       end
+
+      it "if Katex is in #{sym} but has syntax errors it adds an error to the model" do
+        @obj.update sym => "Invalid $$\frac{$$"
+        expect(@obj.errors[sym].count).to be > 0
+      end
     end
   end
 

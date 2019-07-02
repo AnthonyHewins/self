@@ -6,6 +6,16 @@
   <%= author_label @article %>
 </div>
 
+<div class="grey">
+  <div class="field">
+    Created at <%= @article.created_at %>
+  </div>
+
+  <div class="field">
+    Last updated at <%= @article.updated_at %>
+  </div>
+</div>
+
 <% if current_user&.has_permission? @article %>
   <% if current_user != @article.owner && current_user.admin? %>
     <% msg = "Edit article as admin" %>
