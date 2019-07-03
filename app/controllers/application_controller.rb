@@ -1,4 +1,4 @@
-require Rails.root.join 'lib/assets/permission'
+require 'concerns/permission'
 
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception

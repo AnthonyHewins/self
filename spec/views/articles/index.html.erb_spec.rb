@@ -15,13 +15,13 @@ RSpec.describe "articles/index", type: :view do
       render
     end
 
-    [:tldr, :title].each do |attr|
+    %i[tldr title].each do |attr|
       it "renders the article's :#{attr}" do
         expect(rendered).to include @article.send attr
       end
     end
 
-    it 'renders the author handle with his/her gravatar' do
+    it 'renders the author handle' do
       expect(rendered).to include @article.author.handle
     end
   end

@@ -1,6 +1,7 @@
 require 'rails_helper'
 require 'katex'
 require_relative '../custom_matchers/have_alias_method'
+require_relative '../custom_matchers/validate_with'
 
 RSpec.describe Article, type: :model do
   before :each do
@@ -30,44 +31,8 @@ RSpec.describe Article, type: :model do
   it {should validate_presence_of :body}
   it {should validate_length_of(:body).is_at_least(ArticleValidator::BODY_MIN)}
 
-  context ':tldr_image validation' do
-    before :each do
-      @file = Tempfile.new("toobig")
-    end
-
-    context "if size is greater than #{ArticleValidator::TLDR_IMAGE_MAX} bytes" do
-      before :each do
-        @file.write "a" * (ArticleValidator::TLDR_IMAGE_MAX + 1)
-        @file.rewind
-        @obj.tldr_image.attach(io: @file, filename: "x", content_type: "image/jpeg")
-      end
-      
-      it "purges the attachment" do
-        @obj.save
-        expect(@obj.tldr_image.attachment).to be nil
-      end
-      
-      it "adds an error" do
-        expect(@obj.save).to be false
-      end
-    end
-
-    context "if the content type isn't an image" do
-      before :each do        
-        @obj.tldr_image.attach(io: @file, filename: "x", content_type: "application/exe")
-      end
-
-      it "purges the attachment" do
-        @obj.save
-        expect(@obj.tldr_image.attachment).to be nil
-      end
-      
-      it "raises an error" do
-        expect(@obj.save).to be false
-      end
-    end
-  end
-
+  it {should validate_with(ArticleValidator)}
+  
   context ':tags validation' do
     it 'adds an error if the article has more than 5 tags' do
       @obj.tags = create_list(:tag, 6)

@@ -28,3 +28,13 @@
 yarn-debug.log
 .yarn-integrity
 spec/examples.txt
+
+# Emacs blacklist
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*

@@ -1,7 +1,7 @@
 <div class="ui inverted vertical footer segment flex-wrapper" id="footer"margin-top: 8em;padding-bottom:18em>
   <div class="ui container">
     <div class="ui stackable inverted divided equal height stackable grid">
-      <div class="eight wide column">
+      <div class="six wide column">
         <h4 class="inverted">Information</h4>
         <div class="ui inverted link list">
           <%= link_to "About", about_path, class: "item" %>
@@ -10,12 +10,23 @@
           <%= link_to "Privacy", privacy_path, class: "item" %>
         </div>
       </div>
-      <div class="eight wide column">
+      <div class="six wide column">
         <h4 class="inverted">Technical Docs</h4>
         <div class="ui inverted link list">
           <a href="<%= tag_to_href "mathematics" %>" class="item">Mathematics</a>
           <a href="<%= tag_to_href "computer science" %>" class="item">Computer Science</a>
           <a href="<%= tag_to_href "physics" %>" class="item">Physics</a>
+        </div>
+      </div>
+      <div class="two wide column">
+        <h4 class="inverted">Users</h4>
+        <div class="ui inverted link list">
+          <%= link_to "All", users_path, class: "item" %>
+
+          <% most_poppin_user = most_popular_user %>
+          <% unless most_poppin_user.nil? %>
+            <%= link_to "Most popular user right now", most_popular_user, class: "item" %>
+          <% end %>
         </div>
       </div>
     </div>

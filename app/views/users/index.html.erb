@@ -1,0 +1,28 @@
+<div class="ui container">
+  <div class="ui stackable items">
+    <% @users.each do |user| %>
+      <div class="item" id="<%= dom_id(user) %>">
+
+        <div class="ui tiny image">
+          <%= image_tag(user.profile_picture.attachment || "empty_set.png") %>
+        </div>
+
+        <div class="content">
+          <%= link_to user.handle, user, class: "header" %>
+
+          <div class="meta">
+            <% if user.admin? %>
+              <label class="ui red label">
+                Administrator <i class="shield alterate icon"></i>
+              </label>
+            <% end %>
+          </div>
+
+          <div class="extra">
+            Articles written: <%= Article.where(author: user).count %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

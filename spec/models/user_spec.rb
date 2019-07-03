@@ -1,13 +1,16 @@
 require 'rails_helper'
+require_relative '../custom_matchers/validate_with'
 
 RSpec.describe User, type: :model do
   it {should have_secure_password}
   it {should have_many(:articles).dependent(:nullify)}
 
+  it {should validate_with(UserValidator)}
+  
   context "constants" do
     [[:PW_MIN, 6], [:PW_MAX, 72], [:HANDLE_MIN, 1], [:HANDLE_MAX, 64]].each do |name, val|
       it "#{name} equals #{val}" do
-        expect(User.const_get name).to eq val
+        expect(UserValidator.const_get name).to eq val
       end
     end
   end
@@ -16,8 +19,8 @@ RSpec.describe User, type: :model do
     subject {build :user, password: nil}
     it {should validate_presence_of :password}
     it {should validate_length_of(:password)
-                .is_at_least(User::PW_MIN)
-                .is_at_most(User::PW_MAX)}
+                .is_at_least(UserValidator::PW_MIN)
+                .is_at_most(UserValidator::PW_MAX)}
     it {should_not allow_value('a' * 6).for :password} # Missing number/special char
     it {should_not allow_value('1' * 6).for :password} # Missing letter
     it {should_not allow_value('!' * 6).for :password} # Missing letter
@@ -27,8 +30,10 @@ RSpec.describe User, type: :model do
       expect{user.update handle: "hi12"}.to_not raise_error
     end
 
-    it 'password should allow anything in "!@\#$%^&*()<>"' do
-      '!@\#$%^&*()<>'.each_char {|i| should allow_value("a#{i}" * 3).for :password}
+    it "password should allow anything in #{UserValidator::PW_SPECIAL_CHARS}" do
+      UserValidator::PW_SPECIAL_CHARS.each_char do |i|
+        should allow_value("a#{i}" * 3).for :password
+      end
     end
   end
 

@@ -1,0 +1,36 @@
+<div class="ui segment">
+  <div class="ui stackable items">
+    <div class="item" id="<%= dom_id(@user) %>">
+
+      <div class="ui medium image">
+        <%= image_tag(@user.profile_picture.attachment || "empty_set.png") %>
+      </div>
+
+      <div class="content">
+        <%= link_to @user.handle, @user, class: "header" %>
+
+        <div class="meta">
+          <% if @user.admin? %>
+            <label class="ui red label">
+              Administrator <i class="shield alterate icon"></i>
+            </label>
+          <% end %>
+        </div>
+
+        <div class="extra">
+          Joined: <%= @user.created_at %>
+        </div>
+
+        <div class="extra">
+          Articles written: <%= Article.where(author: @user).count %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h1>Recent activity</h1>
+
+<div class="ui stackable items">
+  <%= render partial: "articles/index/article", collection: @user.articles.last(5) %>
+</div>

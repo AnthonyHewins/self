@@ -1,24 +1,24 @@
+require 'user_validator'
+
 class User < PermissionModel
   has_secure_password
 
   has_many :articles, foreign_key: :author_id, dependent: :nullify
 
-  validate :custom_validations
+  has_one_attached :profile_picture
 
-  PW_MIN = 6
-  PW_MAX = 72 # this constraint is given by has_secure_password
+  validates_with UserValidator
+
   validates :password,
             presence: true,
-            length: {minimum: PW_MIN},
-            format: {with: /(?=.*[a-zA-Z])(?=.*[0-9!@\\\#$%^&*()<>]).{#{PW_MIN},#{PW_MAX}}/,
+            length: {minimum: UserValidator::PW_MIN},
+            format: {with: UserValidator::PW_REGEX,
                      message: "must contain a letter and a special character."},
             if: lambda {|user| user.new_record? || !user.password.blank?}
 
-  HANDLE_MIN = 1
-  HANDLE_MAX = 64
   validates :handle,
             presence: true,
-            length: {in: HANDLE_MIN..HANDLE_MAX},
+            length: {in: UserValidator::HANDLE_MIN..UserValidator::HANDLE_MAX},
             uniqueness: true
 
   before_save do |record|
@@ -34,14 +34,5 @@ class User < PermissionModel
 
   def owner
     self
-  end
-
-  private
-  def custom_validations
-    if handle.nil?
-      errors.add(:handle, "Handle cannot be null")
-    else
-      errors.add(:handle, "Anonymous is a reserved handle") if handle.downcase == "anonymous"
-    end
   end
 end

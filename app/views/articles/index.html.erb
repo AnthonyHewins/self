@@ -2,31 +2,7 @@
   <%= render 'articles/index/header' %>
 
   <div class="ui stackable items">
-    <% @articles.each do |article| %>
-      <div class="item" id="<%= dom_id(article) %>">
-
-        <div class="ui tiny image">
-          <%= image_tag(article.tldr_image.attachment || "empty_set.png") %>
-        </div>
-
-        <div class="content">
-          <%= link_to article.get_title, article, class: "header" %>
-
-          <div class="meta">
-            <%= author_label article %>
-            <%= render partial: 'tags/tag', collection: article.tags %>
-          </div>
-
-          <div class="description">
-            <%= article.get_tldr %>
-          </div>
-
-	  <div class="extra">
-            Last updated at <%= article.updated_at %>
-	  </div>
-        </div>
-      </div>
-    <% end %>
+    <%= render partial: "articles/index/article", collection: @articles %>
   </div>
 
   <div class="pagination">

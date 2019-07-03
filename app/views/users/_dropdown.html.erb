@@ -1,7 +1,7 @@
 <% if local_assigns.key? :users %>
   <% users = local_assigns[:users] %>
 <% else %>
-  <% users = User.select(:id, :handle).all %>
+  <% users = User.select(:id, :handle, :admin).all %>
 <% end %>
 
 <%#================================================================%>
@@ -17,6 +17,10 @@
     <% users.each do |user| %>
       <div class="item" data-value="<%= user.id %>">
         <%= user.handle %>
+
+        <% if user.admin? %>
+          <i class="red shield alternate icon"></i>
+        <% end %>
       </div>
     <% end %>
 
