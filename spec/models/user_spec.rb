@@ -64,8 +64,8 @@ RSpec.describe User, type: :model do
       @random_dudes_articles = [create(:article, author: create(:user))] * 2
     end
 
-    it 'throws TypeError unless models.all? are instances of PermissionModel' do
-      expect{create(:user).has_permission? ""}.to raise_error TypeError
+    it 'throws NoMethodError unless each model responds_to? :owner' do
+      expect{create(:user).has_permission? ""}.to raise_error NoMethodError
     end
     
     context 'as an admin' do

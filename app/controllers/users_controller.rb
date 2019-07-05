@@ -1,10 +1,12 @@
 require 'concerns/permission'
+require 'concerns/error_actions'
 
 class UsersController < ApplicationController
   include Permission
+  include ErrorActions
 
-  before_action :set_and_authorize, only: %i[edit update destroy]
-  before_action :authorize, only: %i[change_password update_password]
+  before_action :authorize,
+                only: %i[change_password update_password update destroy edit]
 
   UPDATE = 'User was successfully updated.'.freeze
   DELETE = "User successfully deleted.".freeze
@@ -21,22 +23,23 @@ class UsersController < ApplicationController
  
   def edit
   end
-  
+
   def update
-    if @user.update(user_params)
-      redirect_to @user, flash: {green: UPDATE}
+    if current_user.update(user_params)
+      redirect_to current_user, flash: {green: UPDATE}
     else
-      flash.now[:red] = @user.errors
+      flash.now[:red] = current_user.errors
       render :edit
     end
   end
 
   def destroy
-    if @user.destroy
+    if current_user.destroy
       redirect_to users_path, flash: {info: DELETE}
+      reset_session
     else
-      flash.now[:red] = @user.errors
-      redirect_to @user
+      flash.now[:red] = current_user.errors
+      redirect_to current_user
     end
   end
 
@@ -67,10 +70,5 @@ class UsersController < ApplicationController
     else
       error user.errors, 'change_password'
     end
-  end
-  
-  def error(msg, render_path)
-    flash.now[:red] = msg
-    render render_path
   end
 end

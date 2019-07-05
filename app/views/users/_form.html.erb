@@ -1,7 +1,7 @@
-<%= form_with(model: user, local: true, id: dom_id(user), class: "ui form") do |f| %>  
+<%= form_with(model: user, local: true, url: url, class: "ui form", method: method) do |f| %>  
   <div class="field">
     <%= f.label :profile_picture, "Profile picture", class: 'label' %>
-    <%= f.file_field :profile_picture, id: 'tldr-image' %>
+    <%= f.file_field :profile_picture, accept: 'image/*' %>
   </div>
 
   <div class="field">

@@ -24,6 +24,12 @@
         <div class="extra">
           Articles written: <%= Article.where(author: @user).count %>
         </div>
+
+        <% if current_user == @user %>
+          <a class="extra" href="<%= delete_path %>" data-confirm="Are you sure?" data-method="delete">
+            <i class="red trash icon"></i> Delete account
+          </a>
+        <% end %>
       </div>
     </div>
   </div>

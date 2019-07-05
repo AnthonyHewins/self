@@ -1,4 +1,6 @@
 <div class="ui container">
+  <h1>all users</h1>
+  
   <div class="ui stackable items">
     <% @users.each do |user| %>
       <div class="item" id="<%= dom_id(user) %>">

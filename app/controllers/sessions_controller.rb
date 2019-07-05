@@ -1,4 +1,8 @@
+require 'concerns/error_actions'
+
 class SessionsController < ApplicationController
+  include ErrorActions
+
   LOGIN_PROMPT = 'Logged in successfully.'.freeze
   INCORRECT_COMBINATION_PROMPT = 'Incorrect handle/password combination.'.freeze
   
@@ -10,7 +14,7 @@ class SessionsController < ApplicationController
     if user
       login user
     else
-      invalid_login :red, INCORRECT_COMBINATION_PROMPT
+      error INCORRECT_COMBINATION_PROMPT, :new
     end
   end
 
@@ -25,10 +29,5 @@ class SessionsController < ApplicationController
     session[:user_id] = user.id
     flash[:info] = LOGIN_PROMPT
     redirect_to root_url
-  end
-
-  def invalid_login(flash_message_class, text)
-    flash.now[flash_message_class] = text
-    render 'new'
   end
 end

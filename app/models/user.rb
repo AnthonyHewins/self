@@ -26,8 +26,7 @@ class User < PermissionModel
   end
 
   def has_permission?(*models, &block)
-    all_permission_models = models.all? {|model| model.is_a? PermissionModel}
-    raise TypeError, "All models must be instances of PermissionModel" unless all_permission_models
+    raise NoMethodError unless models.all? {|model| model.respond_to? :owner}
     has_access = self.admin? || models.all? {|model| model.owner == self}
     block_given? ? has_access && block.call : has_access
   end

@@ -3,9 +3,12 @@ Rails.application.routes.draw do
   get "login" => "sessions#new"
   post "login" => "sessions#create"
 
-  
+  get 'edit-profile' => 'users#edit'
+  delete 'delete' => 'users#destroy'
+  patch 'update-profile' => 'users#update'
+
   resources :articles
-  resources :users, except: %i[create new] do
+  resources :users, only: %i[index show] do
     collection do
       get 'change-password' => 'users#change_password'
       patch 'change-password' => 'users#update_password'

@@ -1,7 +1,9 @@
 require 'concerns/permission'
+require 'concerns/error_actions'
 
 class ArticlesController < ApplicationController
   include Permission
+  include ErrorActions
 
   before_action :set_and_authorize, only: %i[edit update destroy]
   before_action :authorize, only: %i[new create]
@@ -21,8 +23,7 @@ class ArticlesController < ApplicationController
     if @article.save
       redirect_to @article, flash: {green: 'Article was successfully created.'}
     else
-      flash.now[:red] = @article.errors
-      render :new
+      error @article.errors, :new
     end
   end
 
@@ -30,8 +31,7 @@ class ArticlesController < ApplicationController
     if @article.update(article_params)
       redirect_to @article, flash: {green: 'Article was successfully updated.'}
     else
-      flash.now[:red] = @article.errors
-      render :edit
+      error @article.errors, :edit
     end
   end
 
@@ -39,8 +39,7 @@ class ArticlesController < ApplicationController
     if @article.destroy
       redirect_to articles_path, flash: {info: "Article successfully deleted."}
     else
-      flash.now[:red] = @article.errors
-      redirect_to @article
+      error @article.errors, @article
     end
   end
   
