@@ -8,19 +8,11 @@ RSpec.describe Article, type: :model do
     @obj = create :article
   end
 
-  context "constants" do
-    [[:TITLE_MIN, 10], [:TITLE_MAX, 1000], [:TLDR_MAX, 1500], [:BODY_MIN, 128]].each do |name, val|
-      it "#{name} equals #{val}" do
-        expect(ArticleValidator.const_get name).to eq val
-      end
-    end
-  end
-
   it {should have_many(:tags).through(:articles_tag)}
   it {should have_many(:articles_tag)}
 
   it {should belong_to(:author).class_name("User").with_foreign_key(:author_id).optional}
-  
+
   it {should validate_presence_of :title}
   it {should validate_length_of(:title)
               .is_at_least(ArticleValidator::TITLE_MIN)
@@ -31,54 +23,11 @@ RSpec.describe Article, type: :model do
   it {should validate_presence_of :body}
   it {should validate_length_of(:body).is_at_least(ArticleValidator::BODY_MIN)}
 
+  it {should validate_numericality_of(:views).is_greater_than_or_equal_to(0)
+              .only_integer}
+  
   it {should validate_with(ArticleValidator)}
   
-  context ':tags validation' do
-    it 'adds an error if the article has more than 5 tags' do
-      @obj.tags = create_list(:tag, 6)
-      expect(@obj.save).to be false
-    end
-
-    it 'adds an error if duplicate tags are found' do
-      tag = create :tag
-      @obj.tags = [tag,tag]
-      expect(@obj.save).to be false
-    end
-  end
-  
-  context 'before_save' do
-    it ":tldr is nil'd out when its blank" do
-      @obj.update tldr: ''
-      expect(@obj.tldr).to be nil
-    end
-
-    %i[title tldr body].each do |sym|
-      it "strips :#{sym} before save" do
-        old = @obj.send sym
-        @obj.update(sym => "   #{old}   ")
-        expect(@obj.send(sym)).to eq old
-      end
-    end
-
-    %i[title tldr body].each do |sym|
-      it "if no katex is detected in #{sym} (ie, no '$$' delimiters), keeps :#{sym}_katex nil" do
-        @obj.update sym => "No katex"
-        expect(@obj.reload.send "#{sym}_katex").to be nil
-      end
-
-      it "if katex is detected in #{sym}, parses it and places it in :#{sym}_katex" do
-        katex = "a^2"
-        @obj.update sym => "Buffer for length validations #{FFaker::Lorem.words(20)} $$#{katex}$$"
-        expect(@obj.reload.send "#{sym}_katex").to include Katex.render(katex)
-      end
-
-      it "if Katex is in #{sym} but has syntax errors it adds an error to the model" do
-        @obj.update sym => "Invalid $$\frac{$$"
-        expect(@obj.errors[sym].count).to be > 0
-      end
-    end
-  end
-
   %i[title tldr].each do |sym|
     context "#get_#{sym}" do
       before :each do

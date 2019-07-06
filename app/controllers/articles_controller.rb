@@ -27,6 +27,10 @@ class ArticlesController < ApplicationController
     end
   end
 
+  def show
+    @article.update views: @article.views.succ
+  end
+
   def update
     if @article.update(article_params)
       redirect_to @article, flash: {green: 'Article was successfully updated.'}

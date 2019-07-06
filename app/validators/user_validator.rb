@@ -10,7 +10,7 @@ class UserValidator < ActiveModel::Validator
 
   HANDLE_MIN = 1
   HANDLE_MAX = 64
-  
+
   PROFILE_PIC_MAX_SIZE = ValidationLib::AttachmentValidator::MAX_SIZE
 
   def validate(record)

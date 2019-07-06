@@ -10,6 +10,7 @@ class UsersController < ApplicationController
 
   UPDATE = 'User was successfully updated.'.freeze
   DELETE = "User successfully deleted.".freeze
+  PW_CHANGED = "Successfully changed password.".freeze
   PW_MISMATCH = "New password and confirm password do not match".freeze
   ORIGINAL_PW_INCORRECT = "Current password was incorrect. Enter current password to change it to new password.".freeze
 
@@ -66,7 +67,7 @@ class UsersController < ApplicationController
 
   def try_change_password(user, new_pw)
     if user.update(password: new_pw)
-      redirect_to user, flash: {info: "Successfully changed password."}
+      redirect_to user, flash: {info: PW_CHANGED}
     else
       error user.errors, 'change_password'
     end

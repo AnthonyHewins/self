@@ -14,6 +14,10 @@
   <div class="field">
     Last updated at <%= @article.updated_at %>
   </div>
+
+  <div class="field">
+    View count: <%= @article.views %>
+  </div>
 </div>
 
 <% if current_user&.has_permission? @article %>

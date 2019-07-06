@@ -7,14 +7,6 @@ RSpec.describe User, type: :model do
 
   it {should validate_with(UserValidator)}
   
-  context "constants" do
-    [[:PW_MIN, 6], [:PW_MAX, 72], [:HANDLE_MIN, 1], [:HANDLE_MAX, 64]].each do |name, val|
-      it "#{name} equals #{val}" do
-        expect(UserValidator.const_get name).to eq val
-      end
-    end
-  end
-
   context ':password' do
     subject {build :user, password: nil}
     it {should validate_presence_of :password}

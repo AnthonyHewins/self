@@ -8,28 +8,36 @@ RSpec.describe "articles/show", type: :view do
     end
   end
 
-  context "as a regular user," do
+  context '' do
     before :each do
       @article = create :article
       render
     end
 
-    %i[tldr title body].each do |attr|
-      it "renders attribute :#{attr} (doesnt test katex rendering)" do
-        expect(rendered).to include @article.send attr
+    context 'in any context,' do
+      %i[tldr title body].each do |attr|
+        it "renders attribute :#{attr} (doesnt test katex rendering)" do
+          expect(rendered).to include @article.send attr
+        end
+      end
+
+      it 'shows the view count' do
+        expect(rendered).to include "View count: #{@article.views}"
+      end
+      
+      it 'renders the author handle' do
+        expect(rendered).to include @article.author.handle
       end
     end
 
-    it 'renders the author handle' do
-      expect(rendered).to include @article.author.handle
-    end
+    context "as a regular user/not logged in user," do
+      it 'does not show the edit link' do
+        expect(rendered).to_not include "Edit article"
+      end
 
-    it 'does not show the edit link' do
-      expect(rendered).to_not include "Edit article"
-    end
-
-    it 'does not show the delete link' do
-      expect(rendered).to_not include "Delete article"
+      it 'does not show the delete link' do
+        expect(rendered).to_not include "Delete article"
+      end
     end
   end
 

@@ -18,8 +18,10 @@ class Article < PermissionModel
 
   validates :body, presence: true, length: {minimum: ArticleValidator::BODY_MIN}
 
+  validates :views, numericality: {only_integer: true, greater_than_or_equal_to: 0}
+
   validates_with ArticleValidator
-  
+
   before_save KatexParser.instance
 
   alias_method :owner, :author

@@ -3,6 +3,8 @@ require 'ffaker'
 FactoryBot.define do
   factory :article do
 
+    views { rand(10000) }
+    
     title { FFaker::BaconIpsum.characters(
       rand(ArticleValidator::TITLE_MAX - ArticleValidator::TITLE_MIN) + ArticleValidator::TITLE_MIN)
     }
@@ -16,7 +18,7 @@ FactoryBot.define do
     )}
     
     association :author, factory: :user
-
+    
     after :build do |article|
       article.tldr_image.attach(
         io: Tempfile.new,

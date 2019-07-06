@@ -33,9 +33,23 @@ RSpec.describe ArticlesController, type: :controller do
   end
 
   describe "GET #show" do
-    it "returns a success response" do
-      get :show, params: {id: create(:article).to_param}, session: valid_session
+    before :each do
+      @article = create :article
+    end
+
+    it 'returns a success response if not logged in' do
+      get :show, params: {id: @article.to_param}
       expect(response).to be_successful
+    end
+
+    it "returns a success response" do
+      get :show, params: {id: @article.to_param}, session: valid_session
+      expect(response).to be_successful
+    end
+
+    it 'increases the number of views on the article by 1' do
+      expect {get :show, params: {id: @article.to_param}}
+        .to change {@article.reload.views}.by(1)
     end
   end
 
