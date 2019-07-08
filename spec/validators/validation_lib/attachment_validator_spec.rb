@@ -8,7 +8,7 @@ RSpec.describe ValidationLib::AttachmentValidator do
       @validator = Object.new
       @validator.extend ValidationLib::AttachmentValidator
     end
-    
+
     before :each do
       @file = Tempfile.new("toobig")
       @obj = create :user
@@ -23,7 +23,7 @@ RSpec.describe ValidationLib::AttachmentValidator do
         @file.write "a" * (@max + 1)
         @file.rewind
         @obj.profile_picture.attach(io: @file, filename: "x", content_type: "image/jpeg")
-        @validator.check_image(@obj, @field, content_type: 'image/jpeg', max_size: @max)
+        @validator.send :check_image, @obj, @field, content_type: 'image/jpeg', max_size: @max
       end
 
       it "purges the attachment" do
@@ -38,7 +38,7 @@ RSpec.describe ValidationLib::AttachmentValidator do
     context "if the content type isn't an image" do
       before :each do        
         @obj.profile_picture.attach(io: @file, filename: "x", content_type: "application/exe")
-        @validator.check_image(@obj, @field, content_type: 'image/jpeg')
+        @validator.send :check_image, @obj, @field, content_type: 'image/jpeg'
       end
 
       it "purges the attachment" do

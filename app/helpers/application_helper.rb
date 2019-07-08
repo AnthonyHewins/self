@@ -1,7 +1,6 @@
 module ApplicationHelper
   def most_popular_user
     id = find_most_poppin_user
-    byebug
     id.nil? ? nil : user_path(id: id)
   end
 

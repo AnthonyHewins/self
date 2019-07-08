@@ -2,8 +2,8 @@ require 'concerns/permission'
 require 'concerns/error_actions'
 
 class UsersController < ApplicationController
-  include Permission
-  include ErrorActions
+  include Concerns::Permission
+  include Concerns::ErrorActions
 
   before_action :authorize,
                 only: %i[change_password update_password update destroy edit]

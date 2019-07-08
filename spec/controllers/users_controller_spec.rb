@@ -44,8 +44,8 @@ RSpec.context UsersController, type: :controller do
   end
 
   context "DELETE #destroy" do
-    it "raises Permission::AccessDenied when not logged in" do
-      expect {get :edit}.to raise_error Permission::AccessDenied
+    it "raises Concerns::Permission::AccessDenied when not logged in" do
+      expect {get :edit}.to raise_error Concerns::Permission::AccessDenied
     end
 
     context 'when logged in' do
@@ -62,8 +62,8 @@ RSpec.context UsersController, type: :controller do
   end
 
   context "GET #edit" do
-    it "raises Permission::AccessDenied when not logged in" do
-      expect {get :edit}.to raise_error Permission::AccessDenied
+    it "raises Concerns::Permission::AccessDenied when not logged in" do
+      expect {get :edit}.to raise_error Concerns::Permission::AccessDenied
     end
 
     context 'when logged in' do
@@ -80,8 +80,8 @@ RSpec.context UsersController, type: :controller do
   end
 
   context "PATCH #update-profile" do
-    it "when you're not a logged in user raises Permission::AccessDenied" do
-      expect {patch :update}.to raise_error Permission::AccessDenied
+    it "when you're not a logged in user raises Concerns::Permission::AccessDenied" do
+      expect {patch :update}.to raise_error Concerns::Permission::AccessDenied
     end
 
     context 'when logged in' do

@@ -20,14 +20,5 @@ class ArticleValidator < ActiveModel::Validator
     if record.tldr_image.attached?
       check_image(record, :tldr_image, content_type: 'image/')
     end
-    check_tags(record)
-  end
-
-  private
-  def check_tags(record)
-    to_save = record.tags.map(&:id)
-    count = to_save.count
-    record.errors[:tags] << "has duplicates" if to_save.uniq.count < count
-    record.errors[:tags] << "have a maximum of #{TAGS_MAX} (submitted #{count})" if count > 5
   end
 end

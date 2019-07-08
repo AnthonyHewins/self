@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   # Raise the exception if we're testing to validate a full interrupt occurs
   unless Rails.env.test?
-    rescue_from Permission::AccessDenied do
+    rescue_from Concerns::Concerns::Permission::AccessDenied do
       render file: "public/403", status: :forbidden
     end
   end

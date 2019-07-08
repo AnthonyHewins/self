@@ -2,8 +2,8 @@ require 'concerns/permission'
 require 'concerns/error_actions'
 
 class ArticlesController < ApplicationController
-  include Permission
-  include ErrorActions
+  include Concerns::Permission
+  include Concerns::ErrorActions
 
   before_action :set_and_authorize, only: %i[edit update destroy]
   before_action :authorize, only: %i[new create]

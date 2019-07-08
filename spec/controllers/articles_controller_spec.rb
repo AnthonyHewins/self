@@ -61,17 +61,17 @@ RSpec.describe ArticlesController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    context "raises Permission::AccessDenied" do
+    context "raises Concerns::Permission::AccessDenied" do
       it "when you're not a logged in user" do
         expect {
           delete :destroy, params: {id: create(:article).to_param}
-        }.to raise_error Permission::AccessDenied
+        }.to raise_error Concerns::Permission::AccessDenied
       end
 
       it "if you aren't the owner or an admin" do
         expect {
           delete :destroy, params: {id: create(:article).to_param}, session: valid_session
-        }.to raise_error Permission::AccessDenied
+        }.to raise_error Concerns::Permission::AccessDenied
       end
     end
 
@@ -88,17 +88,17 @@ RSpec.describe ArticlesController, type: :controller do
   end
 
   describe "GET #edit" do
-    context "raises Permission::AccessDenied" do
+    context "raises Concerns::Permission::AccessDenied" do
       it "when you're not a logged in user" do
         expect {
           get :edit, params: {id: create(:article).to_param}
-        }.to raise_error Permission::AccessDenied
+        }.to raise_error Concerns::Permission::AccessDenied
       end
 
       it "if you aren't the owner or an admin" do
         expect {
           get :edit, params: {id: create(:article).to_param}, session: valid_session
-        }.to raise_error Permission::AccessDenied
+        }.to raise_error Concerns::Permission::AccessDenied
       end
     end
 
@@ -118,7 +118,7 @@ RSpec.describe ArticlesController, type: :controller do
     it "fails if you aren't a logged in user" do
       expect {
         post :create, params: valid_attributes
-      }.to raise_error Permission::AccessDenied
+      }.to raise_error Concerns::Permission::AccessDenied
     end
 
     context "with valid params" do
@@ -143,17 +143,17 @@ RSpec.describe ArticlesController, type: :controller do
   end
 
   describe "PUT #update" do
-    context "raises Permission::AccessDenied" do
+    context "raises Concerns::Permission::AccessDenied" do
       it "when you're not a logged in user" do
         expect {
           get :edit, params: {id: create(:article).to_param, article: valid_attributes}
-        }.to raise_error Permission::AccessDenied
+        }.to raise_error Concerns::Permission::AccessDenied
       end
 
       it "if you don't own the article and aren't an admin" do
         expect {
           put :update, params: {id: create(:article).to_param, article: valid_attributes}, session: valid_session
-        }.to raise_error Permission::AccessDenied
+        }.to raise_error Concerns::Permission::AccessDenied
       end
     end
 

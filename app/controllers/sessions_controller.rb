@@ -1,7 +1,7 @@
 require 'concerns/error_actions'
 
 class SessionsController < ApplicationController
-  include ErrorActions
+  include Concerns::ErrorActions
 
   LOGIN_PROMPT = 'Logged in successfully.'.freeze
   INCORRECT_COMBINATION_PROMPT = 'Incorrect handle/password combination.'.freeze

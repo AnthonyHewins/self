@@ -2,6 +2,7 @@ module ValidationLib
   module AttachmentValidator
     MAX_SIZE = 10_000_000
     
+    protected
     def check_image(record, field, content_type:, max_size: MAX_SIZE)
       blob = record.send(field).blob
 
