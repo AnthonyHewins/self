@@ -16,9 +16,9 @@ FactoryBot.define do
     body  { FFaker::BaconIpsum.characters(
       rand(100) + ArticleValidator::BODY_MIN
     )}
-    
+
     association :author, factory: :user
-    
+
     after :build do |article|
       article.tldr_image.attach(
         io: Tempfile.new,

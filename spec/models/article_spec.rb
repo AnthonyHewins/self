@@ -27,7 +27,7 @@ RSpec.describe Article, type: :model do
               .only_integer}
   
   it {should validate_with(ArticleValidator)}
-  
+
   %i[title tldr].each do |sym|
     context "#get_#{sym}" do
       before :each do

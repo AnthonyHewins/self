@@ -11,6 +11,6 @@ RSpec.describe ArticlesTag, type: :model do
     article, tag = create(:article), create(:tag)
     create :articles_tag, article: article, tag: tag
     expect{create :articles_tag, article: article, tag: tag}
-      .to raise_error(ActiveRecord::RecordInvalid, 'Validation failed: Article has already been taken')
+      .to raise_error(ActiveRecord::RecordInvalid, 'Validation failed: Tag has already been taken')
   end
 end

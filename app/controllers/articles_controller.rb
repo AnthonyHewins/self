@@ -59,7 +59,7 @@ class ArticlesController < ApplicationController
   end
 
   def find_tags(tags)
-    tags.blank? ? [] : Tag.find(tags.split(','))
+    tags.blank? ? [] : Tag.find(tags.split(',').uniq)
   end
 
   def find_author(author)

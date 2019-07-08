@@ -6,4 +6,5 @@ class ArticlesTag < ApplicationRecord
   belongs_to :tag
 
   validates :tag, uniqueness: {scope: %i[article]}
+  validates_associated :article
 end
