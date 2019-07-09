@@ -1,9 +1,7 @@
 require 'validation_lib/attachment_validator'
-require 'validation_lib/taggable'
 
 class ArticleValidator < ActiveModel::Validator
   include ValidationLib::AttachmentValidator
-  include ValidationLib::Taggable
 
   TITLE_MIN = 10
   TITLE_MAX = 1000
@@ -16,12 +14,11 @@ class ArticleValidator < ActiveModel::Validator
   
   BODY_MIN = 128
 
-  TAGS_MAX = ValidationLib::Taggable::TAGS_MAX
+  TAGS_MAX = 5
 
   def validate(record)
     if record.tldr_image.attached?
       check_image(record, :tldr_image, content_type: 'image/')
     end
-    check_tags record
   end
 end
