@@ -2,18 +2,24 @@ require 'rails_helper'
 require 'user_validator'
 require 'validation_lib/attachment_validator'
 
-RSpec.describe UserValidator do
-  before :all do
-    @obj = UserValidator.new
-  end
+require_relative './validation_lib/attachment_validator'
+require_relative './validation_lib/tags_validator'
 
-  it { expect(UserValidator.included_modules).to include ValidationLib::AttachmentValidator}
-  
-  context "constants" do
-    [[:PW_MIN, 6], [:PW_MAX, 72], [:HANDLE_MIN, 1], [:HANDLE_MAX, 64]].each do |name, val|
-      it "#{name} equals #{val}" do
-        expect(UserValidator.const_get name).to eq val
-      end
-    end
-  end
+require_relative '../custom_matchers/define_constant'
+
+RSpec.describe UserValidator do
+  include_examples(
+    "attachment",
+    UserValidator.new,
+    :user,
+    :profile_picture,
+    UserValidator::CONTENT_TYPE
+  )
+
+  it {should define_constant :CONTENT_TYPE, 'image/'}
+  it {should define_constant :PW_MIN, 6}
+  it {should define_constant :PW_MAX, 72}
+  it {should define_constant :PW_SPECIAL_CHARS, '!@#$%^&*()'}
+  it {should define_constant :HANDLE_MIN, 1}
+  it {should define_constant :HANDLE_MAX, 64}
 end

@@ -3,7 +3,7 @@ class KatexParser
   include ActionView::Helpers::SanitizeHelper
 
   KATEX_DELIMITER = '$$'
-  
+
   ARTICLE_KATEX_FIELDS = {
     no_html: %i[title tldr],
     html: %i[body]

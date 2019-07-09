@@ -3,9 +3,11 @@ require 'validation_lib/attachment_validator'
 class UserValidator < ActiveModel::Validator
   include ValidationLib::AttachmentValidator
 
+  CONTENT_TYPE = 'image/'.freeze
+  
   PW_MIN = 6
   PW_MAX = 72 # this constraint is given by has_secure_password
-  PW_SPECIAL_CHARS = '!@#$%^&*()'
+  PW_SPECIAL_CHARS = '!@#$%^&*()'.freeze
   PW_REGEX = /(?=.*[a-zA-Z])(?=.*[0-9#{PW_SPECIAL_CHARS}]).{#{PW_MIN},#{PW_MAX}}/
 
   HANDLE_MIN = 1

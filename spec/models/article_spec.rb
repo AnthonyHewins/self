@@ -25,28 +25,42 @@ RSpec.describe Article, type: :model do
 
   it {should validate_numericality_of(:views).is_greater_than_or_equal_to(0)
               .only_integer}
-  
+
   it {should validate_with(ArticleValidator)}
 
-  %i[title tldr].each do |sym|
-    context "#get_#{sym}" do
-      before :each do
-        @word = FFaker::Lorem.word
+  context 'katex getters' do
+    before :each do
+      @word = FFaker::Lorem.word
+    end
+
+    %i[title tldr].each do |sym|
+      context "#get_#{sym}" do
+        it "returns :#{sym} if blank" do
+          @obj.send "#{sym}=", @word
+          @obj.send "#{sym}_katex=", nil
+          expect(@obj.send "get_#{sym}").to eq @word
+        end
+
+        it "returns :#{sym}_katex.html_safe if :#{sym}_katex not blank" do
+          @obj.send "#{sym}_katex=", @word
+          expect(@obj.send "get_#{sym}").to eq @word.html_safe
+        end
       end
-      
-      it "returns :#{sym} if blank" do
-        @obj.send "#{sym}=", @word
-        @obj.send "#{sym}_katex=", nil
-        expect(@obj.send "get_#{sym}").to eq @word
+    end
+
+    context '#get_body' do
+      it "returns body.html_safe if body_katex is nil" do
+        @obj.body, @obj.body_katex = @word, nil
+        expect(@obj.get_body).to eq @word.html_safe
       end
 
-      it "returns :#{sym}_katex.html_safe if :#{sym}_katex not blank" do
-        @obj.send "#{sym}_katex=", @word
-        expect(@obj.send "get_#{sym}").to eq @word.html_safe
+      it "returns body_katex.html_safe if body_katex not blank" do
+        @obj.body_katex = @word
+        expect(@obj.get_body).to eq @word.html_safe
       end
     end
   end
-
+  
   context '::search(q, tags:, author:)' do
     context 'omnisearch' do
       %i[title tldr body].each do |sym|

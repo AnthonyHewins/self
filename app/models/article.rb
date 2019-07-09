@@ -1,5 +1,5 @@
 require 'articles_tag'
-require 'concerns/katex_parser'
+require 'katex_parser'
 require 'concerns/articles_validation'
 
 class Article < PermissionModel
@@ -8,21 +8,23 @@ class Article < PermissionModel
 
   alias_method :owner, :author
 
+  before_save KatexParser.instance
+
   def get_title
     return title_katex.html_safe unless title_katex.blank?
     strip_tags(title)
   end
-  
+
   def get_tldr
     return tldr_katex.html_safe unless tldr_katex.blank?
     strip_tags(tldr)
   end
-  
+
   def get_body
     return body_katex.html_safe unless body_katex.nil?
     body&.html_safe
   end
-  
+
   def self.search(q=nil, tags: nil, author: nil)
     query = search_by_tags tags
     query = search_by_author(query, author)

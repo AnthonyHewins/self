@@ -4,8 +4,10 @@ module ValidationLib
     
     protected
     def check_image(record, field, content_type:, max_size: MAX_SIZE)
-      blob = record.send(field).blob
+      attachment = record.send(field)
+      return unless attachment.attached?
 
+      blob = attachment.blob
       check_size record, field, max_size, blob.byte_size
       check_content_type record, field, content_type, blob.content_type
     end
@@ -18,11 +20,7 @@ module ValidationLib
 
     def check_content_type(record, field, correct_type, received_type)
       return if received_type.starts_with?(correct_type)
-      error(
-        record,
-        field,
-        "must have content type #{correct_type}, received type #{received_type}"
-      )
+      error record, field, "is #{received_type}, must be type #{correct_type}"
     end
 
     def error(record, field, str)
