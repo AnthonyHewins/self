@@ -2,25 +2,12 @@ require 'rails_helper'
 require 'katex'
 
 RSpec.describe KatexParser do
-  it 'has a dictionary for handling Article models with Katex' do
-    expect(KatexParser::ARTICLE_KATEX_FIELDS).to eq({
-      html: %i[body], no_html: %i[title tldr]
-    })
-  end
-  
   context '#before_save' do
-    before :all do
-      @parser = KatexParser.instance
-    end
-
     before :each do
+      @parser = KatexParser.new(html: %i[body], no_html: %i[tldr title])
       @obj = create :article
     end
-
-    it 'raises TypeError on unsupported models' do
-      expect{@parser.before_save ''}.to raise_error TypeError
-    end
-
+    
     it 'nils out blank fields and returns' do
       @obj.tldr = ''
       @parser.before_save(@obj)

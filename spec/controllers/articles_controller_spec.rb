@@ -10,6 +10,7 @@ RSpec.describe ArticlesController, type: :controller do
 
   let(:invalid_attributes) {{
     author: 1,
+    tags: "1,1,1,1,1,1,1",
     created_at: DateTime.now,
     updated_at: DateTime.now,
   }}

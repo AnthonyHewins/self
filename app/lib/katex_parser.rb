@@ -1,52 +1,44 @@
+require 'katex'
+
 class KatexParser
-  include Singleton
   include ActionView::Helpers::SanitizeHelper
 
   KATEX_DELIMITER = '$$'
 
-  ARTICLE_KATEX_FIELDS = {
-    no_html: %i[title tldr],
-    html: %i[body]
-  }
+  def initialize(html:, no_html:)
+    @html, @no_html = html, no_html
+  end
 
   def before_save(record)
-    case record
-    when Article
-      remove_whitespace_and_parse record, ARTICLE_KATEX_FIELDS
-    else
-      raise TypeError
-    end
+    @record = record
+    @no_html.each {|field| tasks field, true}
+    @html.each {|field| tasks field, false}
   end
 
   private
-  def remove_whitespace_and_parse(record, dictionary)
-    dictionary[:no_html].each {|field| before_save_tasks record, field, true}
-    dictionary[:html].each {|field| before_save_tasks record, field, false}
+  def tasks(field, strict)
+    return unless @record.send("#{field}_changed?")
+    return unless remove_whitespace(field)
+    parse_katex field, strict
   end
 
-  def before_save_tasks(record, field, strict)
-    record.send "#{field}=", whitespace_cleanup(record.send field)
-    return if record.send(field).nil?
-    parse_katex record, field, strict
+  def remove_whitespace(field)
+    val = @record.send field
+    @record.send("#{field}=", val.blank? ? nil : val.strip)
   end
 
-  def whitespace_cleanup(val)
-    return nil if val.blank?
-    val.strip
-  end
-
-  def parse_katex(record, field, strict)
-    tokens = record.send(field).split(KATEX_DELIMITER)
+  def parse_katex(field, strict)
+    tokens = @record.send(field).split(KATEX_DELIMITER)
     return if tokens.length == 1
-    render(record, field, tokens, strict)
+    render(field, tokens, strict)
   end
 
-  def render(record, field, tokens, strict)
+  def render(field, tokens, strict)
     begin
       strict ? strict_parse(tokens) : html_parse(tokens)
-      record.send("#{field}_katex=", tokens.join(''))
+      @record.send("#{field}_katex=", tokens.join(''))
     rescue ExecJS::ProgramError
-      record.errors.add(field, "Katex could not be parsed, check your $$ usage")
+      @record.errors.add(field, "Katex could not be parsed, check your $$ usage")
     end
   end
 

@@ -8,7 +8,7 @@ class Article < PermissionModel
 
   alias_method :owner, :author
 
-  before_save KatexParser.instance
+  before_save KatexParser.new(html: %i[body], no_html: %i[tldr title])
 
   def get_title
     return title_katex.html_safe unless title_katex.blank?
