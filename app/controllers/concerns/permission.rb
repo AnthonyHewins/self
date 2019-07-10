@@ -13,7 +13,12 @@ module Concerns
     def authorize
       raise AccessDenied if current_user.nil?
     end
-    
+
+    def admin_only
+      authorize
+      raise AccessDenied unless current_user.admin?
+    end
+
     private
     def get_instance_var
       model = controller_name.classify.constantize
