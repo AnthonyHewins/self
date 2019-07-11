@@ -1,0 +1,27 @@
+<div class="ui fluid search selection dropdown" id="semantic-ui-icon-dropdown">
+  <input name="tag[semantic_ui_icon_id]" type="hidden">
+
+  <i class="dropdown icon"></i>
+  <div class="default text">Semantic UI Icon</div>
+
+  <div class="menu">
+
+    <% SemanticUiIcon.pluck(:id, :icon).each do |id, icon| %>
+      <div class="item" data-value="<%= id %>">
+        <i class="<%= icon %> icon"></i>
+        <%= icon %>
+      </div>
+    <% end %>
+
+  </div>
+</div>
+
+<% selected_id = local_assigns[:id] %>
+<% if selected_id %>
+  <script>
+   $('#semantic-ui-icon-dropdown').dropdown(
+       'set selected',
+       [<%= "'#{i}'".html_safe %>]
+   );
+  </script>
+<% end %>

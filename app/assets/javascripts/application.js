@@ -12,6 +12,7 @@
 //
 //= require rails-ujs
 //= require jquery3
+//= require jquery.minicolors
 //= require semantic-ui
 
 // Initialize setup that will need to be on every page

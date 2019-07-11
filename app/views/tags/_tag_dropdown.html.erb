@@ -1,12 +1,12 @@
 <% multiple = local_assigns[:multiple] %>
 <% selected_ids = local_assigns[:selected_ids] %>
 <% dropdown_class = "ui fluid #{'multiple' if multiple} search selection dropdown" %>
-<% default_text = "Tag#{'s' if multiple}" %>
+<% default_text = "Tag".pluralize multiple %>
 
 <% if local_assigns.key? :tags %>
-  <% tags = local_assigns[:tags].pluck(:id, :name, :css) %>
+  <% tags = local_assigns[:tags].map {|i| [i.id, i.name, i.color, i.icon.icon]} %>
 <% else %>
-  <% tags = Tag.pluck(:id, :name, :css) %>
+  <% tags = Tag.includes(:semantic_ui_icon).pluck(:id, :name, :color, 'semantic_ui_icons.icon') %>
 <% end %>
 
 <%# =================================================================== %>

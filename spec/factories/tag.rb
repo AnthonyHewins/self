@@ -9,10 +9,8 @@ FactoryBot.define do
       )
     }
 
-    css {
-      FFaker::BaconIpsum.characters(
-        Tag::CSS_MIN + rand(Tag::CSS_MAX - Tag::CSS_MIN)
-      )
-    }
+    color { FFaker::Color.hex_code }
+
+    semantic_ui_icon
   end
 end

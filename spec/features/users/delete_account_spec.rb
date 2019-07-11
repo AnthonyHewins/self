@@ -1,10 +1,6 @@
 require 'rails_helper'
 require_relative '../../spec_helper_modules/login'
 
-RSpec.configure do |config|
-  config.include Login
-end
-
 RSpec.describe "Deleting account", type: :feature do
   context 'when not a logged in user' do
     it 'wont show you the delete account link' do

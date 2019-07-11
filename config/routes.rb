@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-  get 'tags/new'
-  get 'tags/create'
-  get 'tags/index'
   get "logout" => "sessions#destroy"
   get "login" => "sessions#new"
   post "login" => "sessions#create"
@@ -11,7 +8,7 @@ Rails.application.routes.draw do
   patch 'update-profile' => 'users#update'
 
   resources :articles
-  resources :tags, only: %i[new index create destroy]
+  resources :tags, except: %i[show]
   resources :users, only: %i[index show] do
     collection do
       get 'change-password' => 'users#change_password'

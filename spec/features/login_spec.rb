@@ -1,10 +1,6 @@
 require 'rails_helper'
 require_relative '../spec_helper_modules/login'
 
-RSpec.configure do |config|
-  config.include Login
-end
-
 RSpec.describe "Login", type: :feature do
   before :all do
     @css_class = lambda {|color| "ui #{color} message"}

@@ -8,6 +8,8 @@ RSpec.describe Article, type: :model do
     @obj = create :article
   end
 
+  it {should have_alias_method :owner, :author}
+
   it {should have_many(:tags).through(:articles_tag)}
   it {should have_many(:articles_tag)}
 
@@ -133,6 +135,4 @@ RSpec.describe Article, type: :model do
       end
     end
   end
-
-  it {should have_alias_method :owner, :author}
 end

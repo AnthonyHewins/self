@@ -1,0 +1,24 @@
+<%= form_with(model: tag, local: true, url: url, class: "ui form", method: method) do |f| %>  
+  <div class="field">
+    <%= f.label :name, class: 'label' %>
+    <%= f.text_field :name, maxlength: Tag::NAME_MAX %>
+  </div>
+
+  <div class="field">
+    <%= f.label :semantic_ui_icon_id, class: 'label' %>
+    <%= render 'semantic_ui_icons/dropdown', selected_id: tag.semantic_ui_icon&.id %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :color, class: 'label' %>
+    <%= f.text_field :color, id: 'color' %>
+  </div> 
+
+  <div class="actions">
+    <%= f.submit "Submit", class: "ui primary button", id: "submit-user" %>
+  </div>
+<% end %>
+
+<script>
+ $('#color').minicolors({inline: true})
+</script>

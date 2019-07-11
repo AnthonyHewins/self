@@ -1,6 +1,12 @@
 require 'rails_helper'
 require 'ffaker'
 
+require_relative '../spec_helper_modules/authenticate'
+
+RSpec.configure do |config|
+  config.include Authenticate
+end
+
 RSpec.describe ArticlesController, type: :controller do
   let(:valid_attributes) {{
     title: FFaker::HipsterIpsum.characters(ArticleValidator::TITLE_MAX),
@@ -15,13 +21,12 @@ RSpec.describe ArticlesController, type: :controller do
     updated_at: DateTime.now,
   }}
 
-  let(:valid_session) {{user_id: create(:user).id}}
-  let(:valid_admin_session) {{user_id: create(:user, admin: true).id}}
+  let(:session) {{user_id: create(:user).id}}
+  let(:admin_session) {{user_id: create(:user, admin: true).id}}
 
   describe "GET #index" do
     it "returns a success response with no params" do
-      create(:article)
-      get :index, params: {}, session: valid_session
+      get :index, session: session
       expect(response).to be_successful
     end
 
@@ -38,13 +43,8 @@ RSpec.describe ArticlesController, type: :controller do
       @article = create :article
     end
 
-    it 'returns a success response if not logged in' do
+    it 'returns a success response at any permission level' do
       get :show, params: {id: @article.to_param}
-      expect(response).to be_successful
-    end
-
-    it "returns a success response" do
-      get :show, params: {id: @article.to_param}, session: valid_session
       expect(response).to be_successful
     end
 
@@ -55,134 +55,129 @@ RSpec.describe ArticlesController, type: :controller do
   end
 
   describe "GET #new" do
-    it "returns a success response" do
-      get :new, params: {}, session: valid_session
+    it "raises Concerns::Permission::AccessDenied when not logged in" do
+      authenticate {get :new}
+    end
+
+    it "returns a success response when logged in" do
+      get :new, session: session
       expect(response).to be_successful
     end
   end
 
   describe "DELETE #destroy" do
+    before :each do
+      @article = create :article
+    end
+
     context "raises Concerns::Permission::AccessDenied" do
       it "when you're not a logged in user" do
-        expect {
-          delete :destroy, params: {id: create(:article).to_param}
-        }.to raise_error Concerns::Permission::AccessDenied
+        authenticate {delete :destroy, params: {id: @article.to_param}}
       end
 
       it "if you aren't the owner or an admin" do
-        expect {
-          delete :destroy, params: {id: create(:article).to_param}, session: valid_session
-        }.to raise_error Concerns::Permission::AccessDenied
+        authenticate {delete :destroy, params: {id: @article.to_param}, session: session}
       end
     end
 
-    it "destroys the article and redirects to articles_path if you're an admin" do
-      delete :destroy, params: {id: create(:article).to_param}, session: valid_admin_session
-      expect(response).to redirect_to(articles_path)
+    context "destroys the article" do
+      it 'if you own it' do
+        delete :destroy, params: {id: @article.to_param}, session: {user_id: @article.author.id}
+        expect(Article.exists? @article.id).to be false
+      end
+
+      it 'if youre an admin' do
+        delete :destroy, params: {id: @article.to_param}, session: admin_session
+        expect(Article.exists? @article.id).to be false
+      end
     end
 
-    it "destroys the article and redirects to articles_path if you're the owner" do
-      user = create :user
-      delete :destroy, params: {id: create(:article, author: user).to_param}, session: {user_id: user.id}
+    it "redirects to articles_path when destroyed by any permission level" do
+      delete :destroy, params: {id: @article.to_param}, session: {user_id: @article.author.id}
       expect(response).to redirect_to(articles_path)
     end
   end
 
   describe "GET #edit" do
-    context "raises Concerns::Permission::AccessDenied" do
-      it "when you're not a logged in user" do
-        expect {
-          get :edit, params: {id: create(:article).to_param}
-        }.to raise_error Concerns::Permission::AccessDenied
-      end
+    before :each do
+      @article = create :article
+    end
 
+    context "raises Concerns::Permission::AccessDenied" do
       it "if you aren't the owner or an admin" do
-        expect {
-          get :edit, params: {id: create(:article).to_param}, session: valid_session
-        }.to raise_error Concerns::Permission::AccessDenied
+        authenticate {get :edit, params: {id: @article.to_param}, session: session}
       end
     end
 
     it "returns a success response if you're an admin" do
-      get :edit, params: {id: create(:article).to_param}, session: valid_admin_session
+      get :edit, params: {id: @article.to_param}, session: admin_session
       expect(response).to be_successful
     end
 
     it "returns a success response if you own the Article" do
-      user = create :user
-      get :edit, params: {id: create(:article, author: user).to_param}, session: {user_id: user.id}
+      get :edit, params: {id: @article.to_param}, session: {user_id: @article.author.id}
       expect(response).to be_successful
     end
   end
 
   describe "POST #create" do
     it "fails if you aren't a logged in user" do
-      expect {
-        post :create, params: valid_attributes
-      }.to raise_error Concerns::Permission::AccessDenied
+      authenticate {post :create, params: valid_attributes}
     end
 
     context "with valid params" do
       it "creates a new Article" do
         expect {
-          post :create, params: {article: valid_attributes}, session: valid_session
+          post :create, params: {article: valid_attributes}, session: session
         }.to change(Article, :count).by(1)
       end
 
       it "redirects to the created article" do
-        post :create, params: {article: valid_attributes}, session: valid_session
+        post :create, params: {article: valid_attributes}, session: session
         expect(response).to redirect_to(Article.last)
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, params: {article: invalid_attributes}, session: valid_session
+        post :create, params: {article: invalid_attributes}, session: session
         expect(response).to be_successful
       end
     end
   end
 
   describe "PUT #update" do
-    context "raises Concerns::Permission::AccessDenied" do
-      it "when you're not a logged in user" do
-        expect {
-          get :edit, params: {id: create(:article).to_param, article: valid_attributes}
-        }.to raise_error Concerns::Permission::AccessDenied
-      end
+    before :each do
+      @article = create :article
+    end
 
+    context "raises Concerns::Permission::AccessDenied" do
       it "if you don't own the article and aren't an admin" do
-        expect {
-          put :update, params: {id: create(:article).to_param, article: valid_attributes}, session: valid_session
-        }.to raise_error Concerns::Permission::AccessDenied
+        authenticate {put :update, params: {id: @article.to_param}, session: session}
       end
     end
 
     context "with valid params" do
       it "updates the requested article if you're an admin" do
-        article = create(:article)
-        put :update, params: {id: article.to_param, article: valid_attributes}, session: valid_admin_session
-        article.reload
-        expect(response).to redirect_to(article)
+        put :update, params: {id: @article.to_param, article: valid_attributes}, session: admin_session
+        expect(@article.reload).to have_attributes valid_attributes
       end
 
       it "updates the requested article if you own the article" do
-        user = create :user
-        article = create(:article, author: user)
-        put :update, params: {id: article.id, article: valid_attributes}, session: {user_id: user.id}
-        article.reload
-        expect(response).to redirect_to(article)
+        put :update, params: {id: @article.to_param, article: valid_attributes}, session: {user_id: @article.author.id}
+        expect(@article.reload).to have_attributes valid_attributes
       end
 
       it "redirects to the article if the update succeeded in any way" do
-        put :update, params: {id: create(:article).to_param, article: valid_attributes}, session: valid_admin_session
+        put :update, params: {id: @article.to_param, article: valid_attributes}, session: admin_session
+        expect(response).to redirect_to(@article)
       end
     end
 
     context "with invalid params" do
-      it "returns a success response" do
-        put :update, params: {id: create(:article).to_param, article: invalid_attributes}, session: valid_admin_session
-        expect(response).to have_http_status(302)
+      it "redirects back to the article" do
+        put :update, params: {id: @article.to_param, article: invalid_attributes}, session: admin_session
+        expect(response).to redirect_to @article
       end
     end
   end

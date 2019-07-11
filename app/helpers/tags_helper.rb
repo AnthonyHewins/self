@@ -4,6 +4,12 @@ module TagsHelper
     "/articles?#{tags.join('&')}"
   end
 
+  def tag_icon(tag, size: nil)
+    color = "color: ##{tag.color}"
+    klass = "#{size} #{tag.icon.icon} icon"
+    content_tag(:i, nil, class: klass, style: color)
+  end
+
   private
   def find_id(arg)
     case arg

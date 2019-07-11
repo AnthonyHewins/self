@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_07_203444) do
+ActiveRecord::Schema.define(version: 2019_07_10_190330) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,9 +57,15 @@ ActiveRecord::Schema.define(version: 2019_07_07_203444) do
     t.index ["tag_id"], name: "index_articles_tags_on_tag_id"
   end
 
+  create_table "semantic_ui_icons", force: :cascade do |t|
+    t.string "icon"
+  end
+
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
-    t.string "css", null: false
+    t.string "color"
+    t.bigint "semantic_ui_icon_id"
+    t.index ["semantic_ui_icon_id"], name: "index_tags_on_semantic_ui_icon_id"
   end
 
   create_table "users", force: :cascade do |t|

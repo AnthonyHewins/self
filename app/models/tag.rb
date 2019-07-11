@@ -1,28 +1,32 @@
-require 'articles_tag'
-
 class Tag < ApplicationRecord
   has_many :articles_tag
   has_many :articles, through: :articles_tag
+  belongs_to :semantic_ui_icon
 
   NAME_MIN = 3
   NAME_MAX = 64
 
-  CSS_MIN = NAME_MIN
-  CSS_MAX = NAME_MAX
+  COLOR_MIN = 3
+  COLOR_MAX = 6
+  COLOR_REGEX = /\A([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/i
 
-  validates :css,
-            presence: true,
-            length: {minimum: CSS_MIN,
-                     maximum: CSS_MAX}
+  validates :color,
+            format: {with: COLOR_REGEX},
+            length: {minimum: COLOR_MIN, maximum: COLOR_MAX}
 
   validates :name,
             presence: true,
             uniqueness: {case_sensitive: false},
-            length: {minimum: NAME_MIN,
-                     maximum: NAME_MAX}
+            length: {minimum: NAME_MIN, maximum: NAME_MAX}
+
+  alias_method :icon, :semantic_ui_icon
+
+  before_validation do |tag|
+    tag.color.sub!('#', '')
+  end
 
   before_save do |tag|
-    tag.css.downcase!
     tag.name.downcase!
+    tag.color&.downcase!
   end
 end
