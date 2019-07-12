@@ -3,6 +3,8 @@ require 'ffaker'
 
 require_relative '../spec_helper_modules/authenticate'
 
+require_relative '../custom_matchers/error_on'
+
 RSpec.configure do |config|
   config.include Authenticate
 end
@@ -15,10 +17,9 @@ RSpec.describe ArticlesController, type: :controller do
   }}
 
   let(:invalid_attributes) {{
-    author: 1,
-    tags: "1,1,1,1,1,1,1",
-    created_at: DateTime.now,
-    updated_at: DateTime.now,
+    title: FFaker::HipsterIpsum.characters(ArticleValidator::TITLE_MAX + 1),
+    body: FFaker::HipsterIpsum.characters(ArticleValidator::BODY_MIN + 1),
+    tldr: FFaker::HipsterIpsum.characters(ArticleValidator::TLDR_MAX + 1),
   }}
 
   let(:session) {{user_id: create(:user).id}}
@@ -139,10 +140,11 @@ RSpec.describe ArticlesController, type: :controller do
     end
 
     context "with invalid params" do
-      it "returns a success response (i.e. to display the 'new' template)" do
+      before :each do
         post :create, params: {article: invalid_attributes}, session: session
-        expect(response).to be_successful
       end
+
+      it {should error_on :new}
     end
   end
 
@@ -175,10 +177,11 @@ RSpec.describe ArticlesController, type: :controller do
     end
 
     context "with invalid params" do
-      it "redirects back to the article" do
+      before :each do
         put :update, params: {id: @article.to_param, article: invalid_attributes}, session: admin_session
-        expect(response).to redirect_to @article
       end
+
+      it {should error_on :edit}
     end
   end
 end

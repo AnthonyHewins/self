@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 require_relative '../custom_matchers/define_constant'
+require_relative '../custom_matchers/have_alias_method'
 
 RSpec.describe Tag, type: :model do
   it {should have_many :articles_tag}
@@ -15,16 +16,18 @@ RSpec.describe Tag, type: :model do
 
   it {should validate_length_of(:color).is_at_most(Tag::COLOR_MAX)
                .is_at_least(Tag::COLOR_MIN)}
-  %w(#000 #000000 asdass).each do |val|
-    it {should_not allow_value(val).for :color}
+
+  %w(#000 #000000 000 000000).each do |val|
+    it {should allow_value(val).for :color}
   end
+  
 
   it {should define_constant :NAME_MIN, 3}
   it {should define_constant :NAME_MAX, 64}
 
   it {should define_constant :COLOR_MIN, 3}
-  it {should define_constant :COLOR_MAX, 6}
-  it {should define_constant :COLOR_REGEX, /\A([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/i}
+  it {should define_constant :COLOR_MAX, 7}
+  it {should define_constant :COLOR_REGEX, /\A[#]{0,1}([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/i}
 
   it {should have_alias_method :icon, :semantic_ui_icon}
 
@@ -33,11 +36,14 @@ RSpec.describe Tag, type: :model do
   end
 
   context 'before_save' do
-    %i[color name].each do |attr|
-      it "downcases #{attr}" do
-        @obj.update attr => @obj.send(attr).upcase
-        expect(@obj.send attr).to eq @obj.send(attr).downcase
-      end
+    it "downcases name" do
+      @obj.update name: @obj.name.upcase
+      expect(@obj.name).to eq @obj.name.downcase
+    end
+
+    it 'downcases color and removes the # if it exists' do
+      @obj.update color: "##{@obj.color.upcase}"
+      expect(@obj.color).to eq @obj.color.downcase.sub('#', '')
     end
   end
 end

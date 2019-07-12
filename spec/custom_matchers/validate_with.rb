@@ -4,7 +4,7 @@ RSpec::Matchers.define :validate_with do |validator|
   end
 
   description do
-    "RSpec matcher for validates_with"
+    "validate with class #{validator}"
   end
 
   failure_message do |text|

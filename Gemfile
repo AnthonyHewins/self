@@ -44,6 +44,7 @@ group :test do
   gem 'ffaker'
   gem 'shoulda-matchers'
   gem 'capybara', '~> 2.13'
+  gem 'rails-controller-testing'
 end
 
 group :development, :test do

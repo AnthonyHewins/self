@@ -4,7 +4,7 @@ RSpec::Matchers.define :define_constant do |sym, val|
   end
 
   description do
-    "RSpec matcher for checking a constant's value"
+    "have ::#{sym} eq to #{val}"
   end
 
   failure_message do |text|

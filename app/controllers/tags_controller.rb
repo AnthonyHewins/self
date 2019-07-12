@@ -9,7 +9,7 @@ class TagsController < ApplicationController
   before_action :set_tag, only: %i[edit update destroy]
 
   def index
-    @tags = Tag.all
+    @tags = Tag.all.paginate(page: params[:page], per_page: 25)
   end
 
   def edit

@@ -7,8 +7,8 @@ class Tag < ApplicationRecord
   NAME_MAX = 64
 
   COLOR_MIN = 3
-  COLOR_MAX = 6
-  COLOR_REGEX = /\A([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/i
+  COLOR_MAX = 7
+  COLOR_REGEX = /\A[#]{0,1}([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/i
 
   validates :color,
             format: {with: COLOR_REGEX},
@@ -21,12 +21,8 @@ class Tag < ApplicationRecord
 
   alias_method :icon, :semantic_ui_icon
 
-  before_validation do |tag|
-    tag.color.sub!('#', '')
-  end
-
   before_save do |tag|
     tag.name.downcase!
-    tag.color&.downcase!
+    tag.color = tag.color.downcase.sub('#','') if tag.color
   end
 end

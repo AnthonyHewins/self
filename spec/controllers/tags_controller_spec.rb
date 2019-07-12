@@ -3,6 +3,8 @@ require 'ffaker'
 
 require_relative '../spec_helper_modules/authenticate'
 
+require_relative '../custom_matchers/error_on'
+
 RSpec.configure do |config|
   config.include Authenticate
 end
@@ -103,10 +105,11 @@ RSpec.describe TagsController, type: :controller do
       end
 
       context 'with invalid params' do
-        it "returns a success response (i.e. to display the 'new' template)" do
+        before :each do
           post :create, params: {tag: invalid_attributes}, session: admin_session
-          expect(response).to be_successful
         end
+
+        it {should error_on :new}
       end
     end
   end
@@ -139,10 +142,11 @@ RSpec.describe TagsController, type: :controller do
     end
 
     context 'with invalid params' do
-      it "redirects back to editing the tag" do
+      before :each do
         put :update, params: {id: @tag.to_param, tag: invalid_attributes}, session: admin_session
-        expect(response).to redirect_to @tag
       end
+
+      it {should error_on :edit}
     end
   end
 end
