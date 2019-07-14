@@ -1,11 +1,9 @@
-<div class="ui container">
-  <%= render 'articles/index/header' %>
+<%= render 'articles/index/header' %>
 
-  <div class="ui stackable items">
-    <%= render partial: "articles/index/article", collection: @articles %>
-  </div>
+<div class="ui stackable items">
+  <%= render partial: "articles/index/article", collection: @articles %>
+</div>
 
-  <div class="pagination">
-    <%= will_paginate @articles %>
-  </div>
+<div class="pagination">
+  <%= will_paginate @articles %>
 </div>

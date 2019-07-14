@@ -8,10 +8,10 @@ RSpec::Matchers.define :error_on do |template|
   end
 
   failure_message do |actual|
-    "expected to validate with #{validator}"
+    "expect response to return 422 Unprocessable entity and render #{template}"
   end
 
   failure_message_when_negated do |text|
-    "do not expected to validate with #{validator}"
+    "expect response to not return 422 Unprocessable entity and render #{template}"
   end
 end

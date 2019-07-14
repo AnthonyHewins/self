@@ -1,46 +1,24 @@
-<h1>Jump to:</h1>
+<% rando = lambda {|klass| klass.limit(1).order(Arel.sql('RANDOM()')).first} %>
 
-<div class="ui link list">
-  <a href="<%= tag_to_href "mathematics" %>" class="active item">
-    <h2>Mathematics</h2>
-  </a>
-  <a href="<%= tag_to_href "discrete mathematics" %>" class="item">
-    Discrete Mathematics
-  </a>
-  <a href="<%= tag_to_href "group theory" %>" class="item">
-    Group theory
-  </a>
-  <a href="<%= tag_to_href "linear algebra" %>" class="item">
-    Linear algebra
-  </a>
-</div>
+<% tag = rando.call Tag %>
+<% user = rando.call User %>
+<% article = rando.call Article %>
 
-<div class="ui link list">
-  <a href="<%= tag_to_href "computer science" %>" class="active item">
-    <h2>Computer Science</h2>
-  </a>
-  <a href="<%= tag_to_href "algorithms" %>" class="item">
-    Algorithms
-  </a>
-  <a href="<%= tag_to_href "theoretical computer science" %>" class="item">
-    Theoretical computer science
-  </a>
-  <a href="<%= tag_to_href "cybersecurity" %>" class="item">
-    Cybersecurity
-  </a>
-</div>
+<% if tag %>
+  <h1>Random topic</h1>
+  <%= render 'tags/tag', tag: tag %>
+<% end %>
 
-<div class="ui link list">
-  <a href="<%= tag_to_href "conspiracy" %>" class="active item">
-    <h2>Conspiracy</h2>
-  </a>
-  <a href="<%= tag_to_href "flat earth" %>" class="item">
-    Flat Earth
-  </a>
-  <a href="<%= tag_to_href "9/11" %>" class="item">
-    9/11
-  </a>
-  <a href="<%= tag_to_href "aliens" %>" class="item">
-    Aliens
-  </a>
-</div>
+<% if user %>
+  <h1>Random user</h1>
+  <div class="ui items">
+    <%= render 'users/index/user', user: user %>
+  </div>
+<% end %>
+
+<% if article %>
+  <h1>Random article</h1>
+  <div class="ui items">
+    <%= render 'articles/index/article', article: article %>
+  </div>
+<% end %>

@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   resources :articles
   resources :tags, except: %i[show]
   resources :users, only: %i[index show] do
+    member do
+      patch 'verify' => 'users#verify'
+    end
     collection do
       get 'change-password' => 'users#change_password'
       patch 'change-password' => 'users#update_password'

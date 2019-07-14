@@ -1,0 +1,16 @@
+<div class="ui right rail">
+  <div class="ui segment">
+    <h3>Verify this user</h3>
+
+    <%= form_tag verify_user_path(@user), method: :patch, class: 'ui form' do %>
+
+      <div class="field">
+        <%= render 'tags/tag_dropdown', selected_ids: @user.tags.map(&:id), multiple: true %>
+      </div>
+
+      <div class="actions">
+        <%= submit_tag "Submit", class: "ui primary button" %>
+      </div>
+    <% end %>
+  </div>
+</div>

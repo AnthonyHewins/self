@@ -1,16 +1,10 @@
 require 'rails_helper'
 
+require_relative 'shared/unique_index'
+
 RSpec.describe ArticlesTag, type: :model do
+  include_examples 'unique index', :articles_tag, :article, :tag
+  
   it {should belong_to(:article)}
   it {should belong_to(:tag)}
-
-  # Workaround for the following not working:
-  # it {should validate_uniqueness_of(:article).scoped_to(:tag)}
-  # https://github.com/thoughtbot/shoulda-matchers/issues/814
-  it 'forces unique (article_id, tag_id) pairs' do
-    article, tag = create(:article), create(:tag)
-    create :articles_tag, article: article, tag: tag
-    expect{create :articles_tag, article: article, tag: tag}
-      .to raise_error(ActiveRecord::RecordInvalid, 'Validation failed: Tag has already been taken')
-  end
 end

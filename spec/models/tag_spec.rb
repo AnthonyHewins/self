@@ -4,7 +4,7 @@ require_relative '../custom_matchers/define_constant'
 require_relative '../custom_matchers/have_alias_method'
 
 RSpec.describe Tag, type: :model do
-  it {should have_many :articles_tag}
+  it {should have_many(:articles_tag).dependent(:destroy)}
   it {should have_many(:articles).through :articles_tag}
 
   it {should belong_to :semantic_ui_icon}
@@ -14,6 +14,7 @@ RSpec.describe Tag, type: :model do
   it {should validate_length_of(:name).is_at_most(Tag::NAME_MAX)
               .is_at_least(Tag::NAME_MIN)}
 
+  it {should allow_value(nil).for :color}
   it {should validate_length_of(:color).is_at_most(Tag::COLOR_MAX)
                .is_at_least(Tag::COLOR_MIN)}
 
@@ -21,7 +22,6 @@ RSpec.describe Tag, type: :model do
     it {should allow_value(val).for :color}
   end
   
-
   it {should define_constant :NAME_MIN, 3}
   it {should define_constant :NAME_MAX, 64}
 

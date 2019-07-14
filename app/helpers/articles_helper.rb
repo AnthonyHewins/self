@@ -2,8 +2,8 @@ module ArticlesHelper
   def author_label(article)
     author = article.author
     return anonymous_label if author.nil?
-    return admin_label(author.handle) if author.admin?
-    regular_label(author.handle)
+    return admin_label(author) if author.admin?
+    regular_label(author)
   end
 
   private
@@ -15,19 +15,15 @@ module ArticlesHelper
     )
   end
 
-  def admin_label(handle)
-    content_tag(
-      :label,
-      ("by #{handle} " + content_tag(:i, nil, class: "shield alternate icon")).html_safe,
+  def admin_label(author)
+    link_to(
+      ("by #{author.handle} " + content_tag(:i, nil, class: "shield alternate icon")).html_safe,
+      user_path(author),
       class: "ui red label"
     )
   end
 
-  def regular_label(handle)
-    content_tag(
-      :label,
-      "by #{handle}",
-      class: "ui label"
-    )
+  def regular_label(author)
+    link_to("by #{author.handle}", user_path(author), class: "ui label")
   end
 end

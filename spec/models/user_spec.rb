@@ -4,9 +4,10 @@ require_relative '../custom_matchers/validate_with'
 RSpec.describe User, type: :model do
   it {should have_secure_password}
   it {should have_many(:articles).dependent(:nullify)}
+  it {should have_many(:tags).through :verifications_user}
 
   it {should validate_with(UserValidator)}
-  
+
   context ':password' do
     subject {build :user, password: nil}
     it {should validate_presence_of :password}

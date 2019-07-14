@@ -1,4 +1,12 @@
 <div class="ui segment">
+  <% if @user.tags.any? %>
+    <%= render 'verifications_user/verified_rail', tags: @user.tags %>
+  <% end %>
+
+  <% if current_user&.admin? %>
+    <%= render 'verifications_user/verify_user_rail', tags: @user.tags %>
+  <% end %>
+
   <div class="ui stackable items">
     <div class="item" id="<%= dom_id(@user) %>">
 

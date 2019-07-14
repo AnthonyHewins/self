@@ -3,6 +3,9 @@ require 'user_validator'
 class User < PermissionModel
   has_secure_password
 
+  has_many :verifications_user
+  has_many :tags, through: :verifications_user
+  
   has_many :articles, foreign_key: :author_id, dependent: :nullify
 
   has_one_attached :profile_picture

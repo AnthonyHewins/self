@@ -12,6 +12,6 @@ RSpec::Matchers.define :validate_with do |validator|
   end
 
   failure_message_when_negated do |text|
-    "do not expected to validate with #{validator}"
+    "expected to not validate with #{validator}"
   end
 end

@@ -2,16 +2,14 @@ module Concerns
   module Permission
     class AccessDenied < RuntimeError; end
 
-    def set_and_authorize
-      raise AccessDenied if current_user.nil?
-      instance_var = get_instance_var
-      raise AccessDenied unless current_user.has_permission? instance_var
-
-      instance_variable_set("@" + controller_name.classify.underscore, instance_var)
-    end
-
+    protected
     def authorize
       raise AccessDenied if current_user.nil?
+    end
+
+    def set_and_authorize
+      authorize
+      get_instance_var
     end
 
     def admin_only
@@ -19,10 +17,17 @@ module Concerns
       raise AccessDenied unless current_user.admin?
     end
 
+    def mod_as_admin
+      admin_only
+      get_instance_var
+    end
+    
     private
     def get_instance_var
       model = controller_name.classify.constantize
-      model.find params[:id]
+      var = model.find params[:id]
+      raise AccessDenied unless current_user.has_permission? var
+      instance_variable_set("@" + controller_name.classify.underscore, var)
     end
   end
 end

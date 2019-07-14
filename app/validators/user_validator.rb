@@ -2,6 +2,7 @@ require 'validation_lib/attachment_validator'
 
 class UserValidator < ActiveModel::Validator
   include ValidationLib::AttachmentValidator
+  include ValidationLib::TagsValidator
 
   CONTENT_TYPE = 'image/'.freeze
   
@@ -16,10 +17,9 @@ class UserValidator < ActiveModel::Validator
   PROFILE_PIC_MAX_SIZE = ValidationLib::AttachmentValidator::MAX_SIZE
 
   def validate(record)
-    if record.profile_picture.attached?
-      check_image(record, :profile_picture, content_type: 'image/')
-    end
+    check_image(record, :profile_picture, content_type: CONTENT_TYPE)
     check_handle record.errors, record.handle
+    check_tags record
   end
 
   private

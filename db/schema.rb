@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_10_190330) do
+ActiveRecord::Schema.define(version: 2019_07_13_175859) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -74,6 +74,14 @@ ActiveRecord::Schema.define(version: 2019_07_10_190330) do
     t.datetime "updated_at", null: false
     t.boolean "admin", default: false
     t.string "password_digest", null: false
+  end
+
+  create_table "verifications_users", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "tag_id"
+    t.index ["tag_id"], name: "index_verifications_users_on_tag_id"
+    t.index ["user_id", "tag_id"], name: "index_verifications_users_on_user_id_and_tag_id", unique: true
+    t.index ["user_id"], name: "index_verifications_users_on_user_id"
   end
 
   add_foreign_key "articles", "users", column: "author_id"

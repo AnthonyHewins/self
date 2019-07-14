@@ -1,5 +1,5 @@
 class Tag < ApplicationRecord
-  has_many :articles_tag
+  has_many :articles_tag, dependent: :destroy
   has_many :articles, through: :articles_tag
   belongs_to :semantic_ui_icon
 
@@ -11,6 +11,7 @@ class Tag < ApplicationRecord
   COLOR_REGEX = /\A[#]{0,1}([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/i
 
   validates :color,
+            allow_nil: true,
             format: {with: COLOR_REGEX},
             length: {minimum: COLOR_MIN, maximum: COLOR_MAX}
 

@@ -4,6 +4,7 @@ require 'concerns/error_actions'
 class ArticlesController < ApplicationController
   include Concerns::Permission
   include Concerns::ErrorActions
+  include Concerns::Taggable
 
   before_action :set_and_authorize, only: %i[edit update destroy]
   before_action :authorize, only: %i[new create]
@@ -51,15 +52,11 @@ class ArticlesController < ApplicationController
   def find_articles
     Article.search(
       params[:q],
-      tags: find_tags(params[:tags]),
+      tags: find_tags,
       author: find_author(params[:author])
     ).with_attached_tldr_image
       .includes(:tags, :author)
       .order(updated_at: :desc)
-  end
-
-  def find_tags(tags)
-    tags.blank? ? [] : Tag.find(tags.split(',').uniq)
   end
 
   def find_author(author)
@@ -73,6 +70,6 @@ class ArticlesController < ApplicationController
   def article_params
     hash = params.require(:article).permit :title, :body, :tldr, :tldr_image, :anonymous
     hash[:author] = hash.delete(:anonymous) == '1' ? nil : current_user
-    hash.merge tags: find_tags(params[:tags])
+    hash.merge tags: find_tags
   end
 end

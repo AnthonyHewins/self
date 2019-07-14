@@ -10,6 +10,10 @@ RSpec.describe UsersController, type: :routing do
       expect(:get => "/users/new").to_not route_to("users#new")
     end
 
+    it 'routes to #verify' do
+      expect(:patch => "/users/1/verify").to route_to("users#verify", :id => "1")
+    end
+    
     it "routes to #show" do
       expect(:get => "/users/1").to route_to("users#show", :id => "1")
     end

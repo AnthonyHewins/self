@@ -1,12 +1,14 @@
 require 'concerns/permission'
 require 'concerns/error_actions'
+require 'concerns/taggable'
 
 class UsersController < ApplicationController
   include Concerns::Permission
   include Concerns::ErrorActions
+  include Concerns::Taggable
 
-  before_action :authorize,
-                only: %i[change_password update_password update destroy edit]
+  before_action :authorize, only: %i[change_password update_password update destroy edit]
+  before_action :mod_as_admin, only: %i[verify]
 
   UPDATE = 'User was successfully updated.'.freeze
   DELETE = "User successfully deleted.".freeze
@@ -25,12 +27,19 @@ class UsersController < ApplicationController
   def edit
   end
 
+  def verify
+    if @user.update tags: find_tags
+      redirect_to @user, flash: {green: "Verified #{@user.handle}."}
+    else
+      error @user.errors, :show
+    end
+  end
+  
   def update
     if current_user.update(user_params)
       redirect_to current_user, flash: {green: UPDATE}
     else
-      flash.now[:red] = current_user.errors
-      render :edit
+      error current_user.errors, :edit
     end
   end
 

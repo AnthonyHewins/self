@@ -1,0 +1,20 @@
+<div class="ui left rail">
+  <div class="ui segment">
+    <h3 class="green">
+      Verified
+      <i class="check icon"></i>
+    </h3>
+
+    <div class="grey">
+      This person is an expert in:
+    </div>
+
+    <div class="ui list">
+      <% tags.each do |tag| %>
+        <div class="item">
+          <%= render 'tags/tag', tag: tag %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

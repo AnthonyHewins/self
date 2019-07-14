@@ -1,7 +1,7 @@
 <div class="ui inverted vertical footer segment flex-wrapper" id="footer">
   <div class="ui container">
     <div class="ui stackable inverted divided equal height stackable grid">
-      <div class="four wide column">
+      <div class="five wide column">
         <h4 class="inverted">Information</h4>
         <div class="ui inverted link list">
           <%= link_to "About", about_path, class: "item" %>
@@ -10,15 +10,7 @@
           <%= link_to "Privacy", privacy_path, class: "item" %>
         </div>
       </div>
-      <div class="four wide column">
-        <h4 class="inverted">Technical Docs</h4>
-        <div class="ui inverted link list">
-          <a href="<%= tag_to_href "mathematics" %>" class="item">Mathematics</a>
-          <a href="<%= tag_to_href "computer science" %>" class="item">Computer Science</a>
-          <a href="<%= tag_to_href "physics" %>" class="item">Physics</a>
-        </div>
-      </div>
-      <div class="four wide column">
+      <div class="six wide column">
         <h4 class="inverted">Users</h4>
         <div class="ui inverted link list">
           <%= link_to "All", users_path, class: "item" %>
@@ -29,7 +21,7 @@
           <% end %>
         </div>
       </div>
-      <div class="four wide column">
+      <div class="five wide column">
         <h4 class="inverted">Tags</h4>
         <div class="ui inverted link list">
           <%= link_to "All", tags_path, class: "item" %>
