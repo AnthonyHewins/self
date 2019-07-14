@@ -5,13 +5,13 @@ class User < PermissionModel
 
   has_many :verifications_user
   has_many :tags, through: :verifications_user
-  
+
   has_many :articles, foreign_key: :author_id, dependent: :nullify
 
   has_one_attached :profile_picture
 
   validates_with UserValidator
-
+  
   validates :password,
             presence: true,
             length: {minimum: UserValidator::PW_MIN},
@@ -28,6 +28,10 @@ class User < PermissionModel
     record.handle.strip!
   end
 
+  def self.by_popularity
+    joins(:articles).group('users.id').order(Arel.sql('sum(articles.views) desc'))
+  end
+  
   def has_permission?(*models, &block)
     raise NoMethodError unless models.all? {|model| model.respond_to? :owner}
     has_access = self.admin? || models.all? {|model| model.owner == self}

@@ -1,0 +1,36 @@
+<h1>Leaderboards</h1>
+
+<% count = 0 %>
+
+<div class="ui stackable grid">
+  <% @users.find_each do |user| %>
+    <% count += 1 %>
+
+    <div class="one wide middle aligned column">
+      <%= content_tag :h1, count %>
+    </div>
+
+    <div class="fifteen wide column">
+      <div class="ui message">
+        <div class="ui tiny image">
+          <%= image_tag(user.profile_picture.attachment || "empty_set.png") %>
+        </div>
+        <div class="content">
+          <%= link_to user.handle, user, class: "header" %>
+          
+          <div class="extra">
+            Articles written: <%= Article.where(author: user).count %>
+          </div>
+          
+          <div class="extra">
+            Views accumulated: <%= user.articles.sum(:views) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="pagination">
+  <%= will_paginate @users %>
+</div>

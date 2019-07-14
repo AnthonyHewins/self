@@ -30,6 +30,13 @@ RSpec.describe User, type: :model do
     end
   end
 
+  context 'scope(:by_popularity)' do
+    it 'returns users by view popularity' do
+      popularity = (10..1).to_a.map {|i| create :article, views: i}
+      expect(User.by_popularity.to_a).to eq popularity
+    end
+  end
+
   context 'before_save' do
     it 'strips whitespace from :handle' do
       expect(create(:user, handle: "   a    ").handle).to eq 'a'

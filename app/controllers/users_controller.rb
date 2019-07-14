@@ -27,6 +27,10 @@ class UsersController < ApplicationController
   def edit
   end
 
+  def leaderboard
+    @users = User.by_popularity.paginate(per_page: 10, page: params[:page])
+  end
+
   def verify
     if @user.update tags: find_tags
       redirect_to @user, flash: {green: "Verified #{@user.handle}."}

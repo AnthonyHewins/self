@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     collection do
       get 'change-password' => 'users#change_password'
       patch 'change-password' => 'users#update_password'
+      get 'leaderboard' => 'users#leaderboard'
     end
   end
 

@@ -14,6 +14,10 @@ RSpec.describe UsersController, type: :routing do
       expect(:patch => "/users/1/verify").to route_to("users#verify", :id => "1")
     end
     
+    it "routes to #leaderboard" do
+      expect(:get => "/users/leaderboard").to route_to("users#leaderboard")
+    end
+    
     it "routes to #show" do
       expect(:get => "/users/1").to route_to("users#show", :id => "1")
     end
