@@ -4,21 +4,17 @@
   <% @users.find_each do |user| %>
     <% @rank += 1 %>
 
-    <div class="one wide middle aligned column">
+    <div class="two wide middle aligned column">
       <%= leaderboard_crown(@rank) %>
     </div>
 
-    <div class="fifteen wide column">
-      <div class="ui message">
-        <div class="ui tiny image">
+    <div class="fourteen wide column">
+      <div class="ui basic segment">
+        <div class="ui small image">
           <%= image_tag(user.profile_picture.attachment || "empty_set.png") %>
         </div>
         <div class="content">
-          <%= link_to user.handle, user, class: "header" %>
-
-          <div class="extra">
-            Articles written: <%= Article.where(author: user).count %>
-          </div>
+          <%= link_to content_tag(:h3, user.handle), user, class: "header" %>
 
           <div class="extra">
             Views accumulated: <%= user.articles.sum(:views) %>
@@ -28,8 +24,6 @@
     </div>
   <% end %>
 </div>
-
-<br>
 
 <div class="pagination">
   <%= will_paginate @users %>

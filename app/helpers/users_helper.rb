@@ -8,14 +8,14 @@ module UsersHelper
     when 3
       third_place
     else
-      content_tag(:h3, rank)
+      content_tag(:h2, rank)
     end
   end
 
   private
   def number_one
     content_tag(
-      :h3,
+      :h2,
       ('1' + content_tag(:i, nil, class: 'chess king icon')).html_safe,
       class: 'gold'
     )
@@ -23,7 +23,7 @@ module UsersHelper
 
   def second_place
     content_tag(
-      :h3,
+      :h2,
       ('2' + content_tag(:i, nil, class: 'chess queen icon')).html_safe,
       class: 'silver'
     )
@@ -31,7 +31,7 @@ module UsersHelper
 
   def third_place
     content_tag(
-      :h3,
+      :h2,
       ('3' + content_tag(:i, nil, class: 'chess rook icon')).html_safe,
       class: 'bronze'
     )

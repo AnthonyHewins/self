@@ -1,22 +1,26 @@
 <div class="item" id="<%= dom_id(user) %>">
 
-  <div class="ui tiny image">
+  <div class="ui small image">
     <%= image_tag(user.profile_picture.attachment || "empty_set.png") %>
   </div>
 
   <div class="content">
     <%= link_to user.handle, user, class: "header" %>
 
-    <div class="meta">
-      <% if user.admin? %>
+    <% if user.admin? %>
+      <div class="meta">
         <label class="ui red label">
           Administrator <i class="shield alterate icon"></i>
         </label>
-      <% end %>
+      </div>
+    <% end %>
+
+    <div class="extra">
+      Article views: <%= user.articles.sum(:views) %>
     </div>
 
     <div class="extra">
-      Articles written: <%= Article.where(author: user).count %>
+      Articles written: <%= user.articles.count %>
     </div>
   </div>
 </div>
