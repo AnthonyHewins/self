@@ -5,6 +5,13 @@
   </div>
 
   <div class="field">
+    <h3>Current profile picture</h3>
+    <div class="large image">
+      <%= image_tag(user.profile_picture.attachment || "empty_set.jpg") %>
+    </div>
+  </div>
+  
+  <div class="field">
     <%= f.label :handle, class: 'label' %>
     <%= f.text_field :handle %>
   </div> 
