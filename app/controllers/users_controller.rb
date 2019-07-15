@@ -16,6 +16,8 @@ class UsersController < ApplicationController
   PW_MISMATCH = "New password and confirm password do not match".freeze
   ORIGINAL_PW_INCORRECT = "Current password was incorrect. Enter current password to change it to new password.".freeze
 
+  LEADERBOARD_PER_PAGE = 25
+  
   def index
     @users = User.all
   end
@@ -28,7 +30,10 @@ class UsersController < ApplicationController
   end
 
   def leaderboard
-    @users = User.by_popularity.paginate(per_page: 10, page: params[:page])
+    @rank = current_rank
+    @users = User.by_popularity.paginate(
+      per_page: LEADERBOARD_PER_PAGE, page: params[:page]
+    )
   end
 
   def verify
@@ -84,5 +89,10 @@ class UsersController < ApplicationController
     else
       error user.errors, 'change_password'
     end
+  end
+
+  def current_rank
+    return 0 if params[:page].nil?
+    LEADERBOARD_PER_PAGE * (params[:page].to_i - 1)
   end
 end
