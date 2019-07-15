@@ -1,0 +1,51 @@
+<%= form_with(model: article, local: true, id: "article-form", class: "ui form") do |f| %>  
+  <%= render 'articles/form/katex_field',
+             form: f,
+             field: :title,
+             minlength: ArticleValidator::TITLE_MIN,
+             maxlength: ArticleValidator::TITLE_MAX,
+             katex: article.get_title %>
+
+  <div class="field">
+    <%= f.label :tags, "Tags (0 to 5 allowed)", class: "label" %>
+    <%= render 'tags/dropdown', multiple: true, selected: article.tags %>
+  </div>
+
+  <%= render 'articles/form/katex_field',
+             form: f,
+             field: :tldr,
+             maxlength: ArticleValidator::TLDR_MAX,
+             katex: article.get_tldr %>
+
+  <div class="field">
+    <%= f.label :tldr_image, "Image for TL;DR (not required)" %>
+    <%= f.file_field :tldr_image, id: 'tldr-image', accept: "image/*" %>
+  </div>
+
+  <%= render 'articles/form/katex_field',
+             form: f,
+             wysiwig: true,
+             field: :body,
+             minlength: ArticleValidator::BODY_MIN,
+             katex: article.get_body %>
+
+  <div class="field">
+    <div class="ui checkbox">
+      <%= f.check_box :anonymous, id: "anonymous" %>
+      <label>
+        Post anonymously (the database will not know who posted this,
+        <strong><i>and you can never change it</i></strong>,
+        since you forfeit all ownership)
+      </label>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Submit", class: "ui primary button", id: "submit-article" %>
+  </div>
+<% end %>
+
+<%# Prevent the textarea from becoming a JS object to make Specs simpler %>
+<% unless Rails.env.test? %>
+  <%= javascript_include_tag "import_html_renderers" %>
+<% end %>

@@ -53,7 +53,7 @@ class ArticlesController < ApplicationController
     Article.search(
       params[:q],
       tags: find_tags,
-      author: find_author(params[:author])
+      author: find_author(params[:users])
     ).with_attached_tldr_image
       .includes(:tags, :author)
       .order(updated_at: :desc)

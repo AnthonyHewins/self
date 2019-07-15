@@ -31,7 +31,7 @@ RSpec.describe ArticlesController, type: :controller do
       expect(response).to be_successful
     end
 
-    %i[tags author].each do |sym|
+    %i[tags users].each do |sym|
       it "raises ActiveRecord::RecordNotFound when no :#{sym} can be found with that id" do
         expect{get :index, params: {sym => "not even a PK"}}
           .to raise_error ActiveRecord::RecordNotFound

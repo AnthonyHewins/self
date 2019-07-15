@@ -1,0 +1,52 @@
+<% wysiwig = local_assigns.fetch(:wysiwig, false) %>
+<% klass = wysiwig ? "wysiwig katex-input" : "katex-input" %>
+<% min = local_assigns.key? :minlength %>
+<% max = local_assigns.key? :maxlength %>
+
+<div class="field" id="<%= field %>-field">
+  <%= form.label field %>
+  <div class="ui two column grid">
+    <div class="column">
+      <%= form.text_area field, id: field, class: klass, "data-target" => "#katex-output-#{field}" %>
+    </div>
+    <div class="column" id="katex-output-<%= field %>">
+      <%= render 'articles/form/katex_target', text: katex %>
+    </div>
+  </div>
+
+  <% if !wysiwig && (max || min) %>
+    <div class="ui error message" id="<%= field %>-error">
+      <%= field.capitalize %> must be:
+      <ul>
+        <%= content_tag(:li, "at least #{minlength} characters") if min %>
+        <%= content_tag(:li, "at most #{maxlength} characters") if max %>
+      </ul>
+    </div>
+
+    <script>
+     document.addEventListener("DOMContentLoaded", function() {
+         const input = document.getElementById('<%= field %>');
+         const field = document.getElementById('<%= field %>-field');
+         const error = $('#<%= field %>-error');
+         
+         input.addEventListener("input", function() {
+             var hasError = false;
+             <% if max %>
+             hasError = input.value.length > <%= maxlength %>;
+             <% end %>
+             <% if min %>
+             hasError = input.value.length < <%= minlength %>;
+             <% end %>
+
+             if (hasError) {
+                 field.classList.add('error');
+                 error.show();
+             } else {
+                 field.classList.remove('error');
+                 error.hide();
+             }
+         })
+     })
+    </script>
+  <% end %>
+</div>

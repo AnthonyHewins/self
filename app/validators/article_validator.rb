@@ -16,7 +16,7 @@ class ArticleValidator < ActiveModel::Validator
 
   TLDR_IMAGE_BAD_TYPE = 'is not the right content type (must be image)'
 
-  BODY_MIN = 128
+  BODY_MIN = 1
 
   TAGS_MAX = 5
 

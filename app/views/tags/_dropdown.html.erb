@@ -1,0 +1,20 @@
+<% tags = local_assigns.fetch :tags, Tag.includes(:semantic_ui_icon).all %>
+<% selected = local_assigns.fetch :selected, nil %>
+<% multiple = local_assigns.fetch :multiple, false %>
+<% selected = local_assigns.fetch :selected, nil %>
+
+<%# =================================================================== %>
+
+<%= render('shared/dropdown',
+           multiple: multiple,
+           options: tags,
+           name: 'tags',
+           default_text: 'Tags',
+           selected: selected) do |tag| %>
+
+  <div class="item" data-value="<%= tag.id %>">
+    <%= tag_icon tag %>
+    <%= tag.name.capitalize %>
+  </div>
+
+<% end %>

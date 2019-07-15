@@ -1,9 +1,4 @@
 module TagsHelper
-  def tag_to_href(*tags)
-    tags.map! {|tag| "tags=#{find_id tag}"}
-    "/articles?#{tags.join('&')}"
-  end
-
   def tag_icon(tag, size: nil)
     color = "color: ##{tag.color}"
     klass = "#{size} #{tag.icon.icon} icon"

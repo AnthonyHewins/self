@@ -22,5 +22,5 @@ RSpec.describe ArticleValidator do
   it {should define_constant :TITLE_MIN, 10}
   it {should define_constant :TITLE_MAX, 1000}
   it {should define_constant :TLDR_MAX, 1500}
-  it {should define_constant :BODY_MIN, 128}
+  it {should define_constant :BODY_MIN, 1}
 end 

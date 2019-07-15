@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe "articles/_form", type: :view do
+RSpec.describe "articles/form/_form", type: :view do
   before(:each) do
     @article = create :article
-    render partial: 'articles/form', locals: {article: @article}
+    render partial: 'articles/form/form', locals: {article: @article}
   end
 
   it "renders the form" do

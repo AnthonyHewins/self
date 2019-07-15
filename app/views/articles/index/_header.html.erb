@@ -1,5 +1,5 @@
 <div class="ui form center">
-  <%= form_with url: articles_path, method: :get, class: "three fields" do |f| %>
+  <%= form_with url: articles_path, method: :get, class: "four fields" do |f| %>
 
     <div class="field">
       <div class="column ui icon input">
@@ -8,11 +8,11 @@
     </div>
 
     <div class="field">
-      <%= render 'tags/tag_dropdown', multiple: true %>
+      <%= render 'tags/dropdown', multiple: true, selected: :tags %>
     </div>
 
     <div class="field">
-      <%= render 'users/dropdown' %>
+      <%= render 'users/dropdown', selected: :users %>
     </div>
 
     <div class="field">

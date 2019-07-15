@@ -1,28 +1,23 @@
-<% if local_assigns.key? :users %>
-  <% users = local_assigns[:users] %>
-<% else %>
-  <% users = User.select(:id, :handle, :admin).all %>
-<% end %>
+<% users = local_assigns.fetch :users, User.select(:id, :handle, :admin).all %>
+<% selected = local_assigns.fetch :selected, nil %>
+<% multiple = local_assigns.fetch :multiple, false %>
+<% selected = local_assigns.fetch :selected, nil %>
 
 <%#================================================================%>
 
-<div class="ui fluid search selection dropdown">
-  <input name="author" type="hidden">
+<%= render('shared/dropdown',
+           multiple: multiple,
+           options: users,
+           name: 'users',
+           default_text: 'Users',
+           selected: selected) do |user| %>
 
-  <i class="dropdown icon"></i>
-  <%= content_tag :div, "Users", class: "default text" %>
+  <div class="item" data-value="<%= user.id %>">
+    <%= user.handle %>
 
-  <div class="menu">
-
-    <% users.each do |user| %>
-      <div class="item" data-value="<%= user.id %>">
-        <%= user.handle %>
-
-        <% if user.admin? %>
-          <i class="red shield alternate icon"></i>
-        <% end %>
-      </div>
+    <% if user.admin? %>
+      <i class="red shield alternate icon"></i>
     <% end %>
-
   </div>
-</div>
+  
+<% end %>

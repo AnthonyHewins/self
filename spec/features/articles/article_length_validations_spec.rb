@@ -10,26 +10,12 @@ end
 RSpec.describe 'Article length validations', type: :feature do
   before :all do
     @title_blank = /title can't be blank/i
-    @title_short = /title is too short \(minimum is 10 characters\)/i
-    @title_long = /title is too long \(maximum is 1000 characters\)/i
+    @title_short = /title is too short \(minimum is #{ArticleValidator::TITLE_MIN} character/i
+    @title_long = /title is too long \(maximum is #{ArticleValidator::TITLE_MAX} character/i
 
-    @body_short = /body is too short \(minimum is 128 characters\)/i
+    @body_short = /body is too short \(minimum is #{ArticleValidator::BODY_MIN} character/i
 
-    @tldr_long = /tldr is too long \(maximum is 1500 characters\)/i
-
-    @expect = lambda do |*msgs|
-      click_button "Submit"
-      flash_message_text = find('#flash').text
-      msgs.each {|msg| expect(flash_message_text).to match msg}
-    end
-
-    @set_title = lambda {|txt| find("#title").set txt}
-    @set_tldr = lambda {|txt| find("#tldr").set txt}
-    @set_body = lambda {|txt| find("#body").set txt}
-
-    test_file = Rails.root.join('tmp/file.png')
-    File.write(test_file, '')
-    @set_tldr_image = lambda {find('#tldr-image').set test_file}
+    @tldr_long = /tldr is too long \(maximum is #{ArticleValidator::TLDR_MAX} character/i
   end
 
   before :each do
@@ -37,51 +23,94 @@ RSpec.describe 'Article length validations', type: :feature do
     visit new_article_path
   end
 
-  it "that's completely blank raises all blank/short errors" do
-    @expect.call @title_short, @title_blank, @body_short
-  end
-
-  context 'only filling in the title' do
-    it "raises title and body too short errors with a title less than 3 chars and no body" do
-      @set_title.call 'aa'
-      @expect.call @title_short, @body_short
+  context "with an article that's completely blank" do
+    before :each do
+      click_on 'Submit'
+      @flash = find('#flash').text
     end
-
-    it "raises title too long, body too short on a title greater than 1000 chars" do
-      @set_title.call('a' * 1001)
-      @expect.call @body_short, @title_long
+    
+    it 'flashes an error on title being too short' do
+      expect(@flash).to match @title_short
     end
-
-    it 'raises only body too short error on a valid title' do
-      @set_title.call 'valid'
-      @expect.call @body_short
+    
+    it 'flashes an error on body being too short' do
+      expect(@flash).to match @body_short
+    end
+    
+    it 'flashes an error on title being blank' do
+      expect(@flash).to match @title_blank
     end
   end
 
-  context 'only filling in tldr' do
-    it 'raises all errors when tldr is over 160 characters' do
-      @set_tldr.call 'a' * (ArticleValidator::TLDR_MAX + 1)
-      @expect.call @tldr_long, @title_short, @title_blank, @body_short
+  context 'when filling in the title' do
+    context "with a title less than #{ArticleValidator::TITLE_MIN} chars" do
+      before :each do
+        random_fill_in title: ArticleValidator::TITLE_MIN - 1
+        click_on 'Submit'
+        @flash = find('#flash').text
+      end
+
+      it 'raises title too short' do
+        expect(@flash).to match @title_short
+      end
+    end
+
+    context "on a title less greater than #{ArticleValidator::TITLE_MAX} chars" do
+      before :each do
+        random_fill_in title: ArticleValidator::TITLE_MAX + 1
+        click_on 'Submit'
+        @flash = find('#flash').text
+      end
+
+      it "raises title too long" do
+        expect(@flash).to match @title_long
+      end
     end
   end
 
-  context 'only filling in the body' do
-    it 'raises body, title too short if body is under 128 chars' do
-      @set_body.call'a'
-      @expect.call @body_short, @title_blank, @title_short
+  context 'when filling in tldr' do
+    context 'with nothing' do
+      before :each do
+        random_fill_in tldr: nil
+        click_on 'Submit'
+        @flash = find('#flash').text
+      end
+      
+      it 'raises no errors are raised about minimum length' do
+        expect(@flash).to match /success/i
+      end
+    end
+
+    context "with over #{ArticleValidator::TLDR_MAX} chars" do
+      before :each do
+        random_fill_in tldr: ArticleValidator::TLDR_MAX + 1
+        click_on 'Submit'
+        @flash = find('#flash').text
+      end
+
+      it 'errors on tldr being too long' do
+        expect(@flash).to match @tldr_long
+      end
     end
   end
 
-  it 'handles a bare bones article, just barely making the cut on validations' do
-    @set_body.call('body' * 150)
-    @set_title.call 'Length 10.'
-    @set_tldr.call 'Very short summary'
-    @expect.call(/success/i)
+  context 'when filling the body' do
+    context "when the body is under #{ArticleValidator::BODY_MIN} chars" do
+      before :each do
+        random_fill_in body: ArticleValidator::BODY_MIN - 1
+        click_on 'Submit'
+        @flash = find('#flash').text
+      end
+
+      it 'errors on body being too short' do
+        expect(@flash).to match @body_short
+      end
+    end
   end
 
-  it 'handles a content-heavy article with all fields filled out' do
+  it 'successfully saves on a proper article' do
     random_fill_in
-    @set_tldr_image.call
-    @expect.call(/success/i)
+    click_on 'Submit'
+    expect(find('#flash').text).to match /success/i
   end
 end

@@ -35,18 +35,18 @@
   <%= link_to delete_msg, article_path(@article), method: :delete %>
 <% end %>
 
-<div class="ui message">
-  <h2>Tags</h2>
-  <p>
-    <% if @article.tags.empty? %>
-      <i>None</i>
-    <% else %>
-      <% @article.tags.each do |article_tag| %>
-        <%= render "tags/tag", tag: article_tag %>
+<% unless @article.tags.empty? %>
+  <div class="ui message">
+    <h2>Tags</h2>
+    <div class="ui list">
+      <% @article.tags.find_each do |tag| %>
+        <div class="item">
+          <%= render "tags/tag", tag: tag %>
+        </div>
       <% end %>
-    <% end %>
-  </p>
-</div>
+    </div>
+  </div>
+<% end %>
 
 <% tldr = @article.get_tldr %>
 <% tldr_image = @article.tldr_image.attachment %>
@@ -56,7 +56,7 @@
     <h2>tldr</h2>
     <%= tldr %>
     <% unless tldr_image.nil? %>
-      <%= image_tag(@article.tldr_image.attachment, style: "width: 100%; height: auto;") %>
+      <%= image_tag(@article.tldr_image.attachment, class: "image") %>
     <% end %>
   </div>
 <% end %>
