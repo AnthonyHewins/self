@@ -1,7 +1,7 @@
 <%= render('shared/dropdown',
            multiple: false,
            options: SemanticUiIcon.all,
-           name: 'semantic_ui_icons',
+           name: local_assigns.fetch(:name, 'semantic_ui_icons'),
            default_text: 'Semantic UI Icons',
            selected: selected) do |icon| %>
 

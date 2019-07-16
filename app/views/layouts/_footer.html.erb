@@ -26,6 +26,7 @@
         <h4 class="inverted">Tags</h4>
         <div class="ui inverted link list">
           <%= link_to "All", tags_path, class: "item" %>
+          <%= link_to("New", new_tag_path, class: "item") if current_user&.admin? %>
         </div>
       </div>
     </div>

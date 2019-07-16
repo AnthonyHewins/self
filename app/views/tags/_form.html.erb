@@ -6,9 +6,11 @@
 
   <div class="field">
     <%= f.label :semantic_ui_icon_id, class: 'label' %>
-    <%= render 'semantic_ui_icons/dropdown', selected: tag.semantic_ui_icon&.id %>
+    <%= render('semantic_ui_icons/dropdown',
+               selected: tag.semantic_ui_icon&.id,
+               name: 'tag[semantic_ui_icon_id]') %>
   </div>
-  
+
   <div class="field">
     <%= f.label :color, class: 'label' %>
     <%= f.text_field :color, id: 'color' %>
