@@ -33,7 +33,7 @@ group :development do
   gem 'capistrano'
   gem 'capistrano-rails'
   gem 'web-console', '>= 3.3.0'
-  gem 'rubocop', require: false
+  gem 'rubocop-rails', require: false
   gem 'bundler-audit'
 end
 
