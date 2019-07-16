@@ -47,6 +47,8 @@ class TagsController < ApplicationController
   end
 
   def tag_params
-    params.require(:tag).permit :name, :color, :semantic_ui_icon_id
+    hash = params.require(:tag).permit :name, :color
+    hash[:semantic_ui_icon_id] = params[:semantic_ui_icons]
+    hash
   end
 end

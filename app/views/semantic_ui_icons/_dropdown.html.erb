@@ -1,12 +1,12 @@
 <%= render('shared/dropdown',
            multiple: false,
            options: SemanticUiIcon.all,
-           name: 'semantic-ui-icons',
+           name: 'semantic_ui_icons',
            default_text: 'Semantic UI Icons',
            selected: selected) do |icon| %>
 
   <div class="item" data-value="<%= icon.id %>">
-    <i class="<%= icon %> icon"></i>
+    <i class="<%= icon.icon %> icon"></i>
     <%= icon.icon %>
   </div>
 
