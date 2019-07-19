@@ -29,10 +29,13 @@ class KatexParser
 
   def parse_katex(field, strict)
     tokens = @record.send(field).split(KATEX_DELIMITER)
-    return if tokens.length == 1
-    render(field, tokens, strict)
+    tokens.length == 1 ? no_katex(field) : render(field, tokens, strict)
   end
 
+  def no_katex(field)
+    @record.send("#{field}_katex=", nil)
+  end
+  
   def render(field, tokens, strict)
     begin
       strict ? strict_parse(tokens) : html_parse(tokens)

@@ -56,5 +56,14 @@ RSpec.describe KatexParser do
         expect(@obj.body_katex).to eq "#{garbage} #{Katex.render('a^2')}"
       end
     end
+
+    context 'on an update with the field changing' do
+      it 'will always replace field_katex' do
+        @obj.update body: "<i>HTML</i> $$katex^2$$"
+        @obj.reload.body = "body_katex should now become nil"
+        @parser.before_save @obj
+        expect(@obj.body_katex).to be nil
+      end
+    end
   end
 end
