@@ -29,6 +29,10 @@ gem 'jquery-rails'
 gem 'jquery-minicolors-rails'
 gem 'katex'
 
+group :development, :production do
+  gem 'rack-attack'
+end
+
 group :development do
   gem 'capistrano'
   gem 'capistrano-rails'
