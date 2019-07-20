@@ -1,3 +1,7 @@
+<%# JQuery requires you escape [ or ] with two backslashes. %>
+<%# The first \ is for JS, the second is for JQuery. %>
+
+<% name = name.gsub('[', '\[').gsub(']', '\]') %>
 <% dropdown_class = "ui fluid #{'multiple' if multiple} search selection dropdown" %>
 
 <%# =================================================================== %>
@@ -19,7 +23,7 @@
   <script>
    $('#<%= name %>').dropdown(
        'set selected',
-       [<%= select_in_dropdown(selected) %>]
+       <%= select_in_dropdown(selected) %>
    );
   </script>
 <% end %>

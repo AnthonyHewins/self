@@ -1,4 +1,8 @@
 module ApplicationHelper
+  def image_tag(image, opts={})
+    super(image || "empty_set.png", opts)
+  end
+  
   def most_popular_user
     id = User.by_popularity.limit(1).pluck(:id).first
     id.nil? ? nil : user_path(id: id)
@@ -7,24 +11,22 @@ module ApplicationHelper
   def select_in_dropdown(var)
     case var
     when Symbol
-      preselect_in_dropdown(params[var].split(',').map {|i| Integer(i)}) rescue nil
+      jquery_str params[var]&.split(',')
     when ActiveRecord::Relation
-      preselect_in_dropdown var.map(&:id)
+      jquery_str var.map {|i| i.id.to_s}
+    when Array
+      jquery_str var.map {|i| i.respond_to?(:id) ? i.id.to_s : i.to_s}
     when Integer
-      jquery_str(var).html_safe
-    when NilClass
-      var
+      jquery_str var
+    when ActiveRecord::Base
+      jquery_str var.id
     else
       raise TypeError
     end
   end
 
   private
-  def preselect_in_dropdown(ints)
-    ints.map {|i| jquery_str(i)}.join(',').html_safe
-  end
-
-  def jquery_str(var)
-    "'#{var}'"
+  def jquery_str(collection)
+    collection.to_s.html_safe
   end
 end

@@ -11,7 +11,7 @@
     <div class="item" id="<%= dom_id(@user) %>">
 
       <div class="ui medium image">
-        <%= image_tag(@user.profile_picture.attachment || "empty_set.png") %>
+        <%= image_tag(@user.profile_picture.attachment) %>
       </div>
 
       <div class="content">

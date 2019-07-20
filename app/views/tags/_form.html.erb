@@ -6,9 +6,7 @@
 
   <div class="field">
     <%= f.label :semantic_ui_icon_id, class: 'label' %>
-    <%= render('semantic_ui_icons/dropdown',
-               selected: tag.semantic_ui_icon&.id,
-               name: 'tag[semantic_ui_icon_id]') %>
+    <%= render('semantic_ui_icons/dropdown', selected: tag.semantic_ui_icon) %>
   </div>
 
   <div class="field">
