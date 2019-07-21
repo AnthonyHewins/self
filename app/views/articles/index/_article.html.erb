@@ -9,7 +9,7 @@
 
     <div class="meta">
       <%= author_label article %>
-      <%= render partial: 'tags/tag', collection: article.tags %>
+      <%= render partial: 'tags/tag', collection: article.reload.tags %>
     </div>
 
     <div class="description">
@@ -17,7 +17,7 @@
     </div>
 
     <div class="extra">
-      Last updated at <%= article.updated_at %>
+      Created at <%= article.created_at %>
     </div>
   </div>
 </div>

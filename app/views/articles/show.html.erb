@@ -1,18 +1,10 @@
-<h1>
-  <%= @article.get_title %>
-</h1>
+<%= content_tag :h1, @article.get_title %>
 
-<div class="field">
-  <%= author_label @article %>
-</div>
+<%= content_tag :div, author_label(@article), class: "field" %>
 
 <div class="grey">
   <div class="field">
     Created at <%= @article.created_at %>
-  </div>
-
-  <div class="field">
-    Last updated at <%= @article.updated_at %>
   </div>
 
   <div class="field">
@@ -21,18 +13,14 @@
 </div>
 
 <% if current_user&.has_permission? @article %>
-  <% if current_user != @article.owner && current_user.admin? %>
-    <% edit_msg = "Edit article as admin" %>
-    <% delete_msg = "Delete article as admin" %>
-  <% else %>
-    <% edit_msg = "Edit article" %>
-    <% delete_msg = "Delete article" %>
-  <% end %>
+  <% admin = current_user != @article.owner && current_user.admin? %>
 
-  <br>
-  <%= link_to edit_msg, edit_article_path(@article) %>
-  <br>
-  <%= link_to delete_msg, article_path(@article), method: :delete %>
+  <div class="field">
+    <%= link_to "Edit article#{' as admin' if admin}", edit_article_path(@article) %>
+  </div>
+  <div class="field">
+    <%= link_to "Delete article#{' as admin' if admin}", article_path(@article), method: :delete %>
+  </div>
 <% end %>
 
 <% unless @article.tags.empty? %>

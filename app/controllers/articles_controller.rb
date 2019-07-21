@@ -50,13 +50,13 @@ class ArticlesController < ApplicationController
   
   private
   def find_articles
-    Article.search(
-      params[:q],
-      tags: find_tags,
-      author: find_author(params[:users])
-    ).with_attached_tldr_image
+    Article.with_attached_tldr_image
       .includes(:tags, :author)
-      .order(updated_at: :desc)
+      .search(
+        params[:q],
+        tags: find_tags,
+        author: find_author(params[:users])
+      ).order(created_at: :desc)
   end
 
   def find_author(author)
