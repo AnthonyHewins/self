@@ -11,9 +11,11 @@ end
 
 RSpec.describe TagsController, type: :controller do
   let(:valid_attributes) {{
-    name: FFaker::HipsterIpsum.characters(Tag::NAME_MAX),
-    color: FFaker::Color.hex_code,
-    semantic_ui_icon_id: create(:semantic_ui_icon).id
+    tag: {
+      name: FFaker::HipsterIpsum.characters(Tag::NAME_MAX),
+      color: FFaker::Color.hex_code,
+    },
+    semantic_ui_icons: create(:semantic_ui_icon).id
   }}
 
   let(:invalid_attributes) {{
@@ -94,12 +96,12 @@ RSpec.describe TagsController, type: :controller do
       context 'with valid params' do
         it "creates a new Tag" do
           expect {
-            post :create, params: {tag: valid_attributes}, session: admin_session
+            post :create, params: valid_attributes, session: admin_session
           }.to change(Tag, :count).by(1)
         end
 
         it "redirects to tags_path" do
-          post :create, params: {tag: valid_attributes}, session: admin_session
+          post :create, params: valid_attributes, session: admin_session
           expect(response).to redirect_to(tags_path)
         end
       end
@@ -122,7 +124,7 @@ RSpec.describe TagsController, type: :controller do
     context "raises Concerns::Permission::AccessDenied" do
       it "if you aren't at least an admin" do
         authenticate do
-          put :update, params: {id: @tag.to_param, tag: valid_attributes}, session: session
+          put :update, params: valid_attributes.merge(id: @tag.to_param), session: session
         end
       end
     end
@@ -130,12 +132,12 @@ RSpec.describe TagsController, type: :controller do
     context "as an admin" do
       context 'with valid params' do
         it "updates the requested tag" do
-          put :update, params: {id: @tag.to_param, tag: valid_attributes}, session: admin_session
-          expect(@tag.reload).to have_attributes valid_attributes
+          put :update, params: valid_attributes.merge(id: @tag.to_param), session: admin_session
+          expect(@tag.reload).to have_attributes valid_attributes[:tag]
         end
 
         it "redirects to tags_path if the update succeeded" do
-          put :update, params: {id: @tag.to_param, tag: valid_attributes}, session: admin_session
+          put :update, params: valid_attributes.merge(id: @tag.to_param), session: admin_session
           expect(response).to redirect_to(tags_path)
         end
       end

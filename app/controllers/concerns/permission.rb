@@ -7,21 +7,21 @@ module Concerns
       raise AccessDenied if current_user.nil?
     end
 
-    def set_and_authorize
-      authorize
-      get_instance_var
-    end
-
     def admin_only
       authorize
       raise AccessDenied unless current_user.admin?
+    end
+
+    def set_and_authorize
+      authorize
+      get_instance_var
     end
 
     def mod_as_admin
       admin_only
       get_instance_var
     end
-    
+
     private
     def get_instance_var
       model = controller_name.classify.constantize

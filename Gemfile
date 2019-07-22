@@ -10,6 +10,9 @@ gem 'rails', '~> 5.2.1'
 # Server
 gem 'puma', '~> 3.7'
 
+# Middleware
+gem 'rack-attack'
+
 # DB
 gem 'pg'
 
@@ -29,9 +32,6 @@ gem 'jquery-rails'
 gem 'jquery-minicolors-rails'
 gem 'katex'
 
-group :development, :production do
-  gem 'rack-attack'
-end
 
 group :development do
   gem 'capistrano'
