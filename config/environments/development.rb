@@ -6,6 +6,9 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
+  # Use rack attack to test how itll work in prod
+  config.middleware.use Rack::Attack
+
   # Do not eager load code on boot.
   config.eager_load = false
 
