@@ -35,7 +35,7 @@ class Rack::Attack
   end
 
   blocklist('block anything php wise') do |req|
-    req.path.match(/.php\Z/)
+    req.path.match(/.php\Z/i)
   end
 
   # Throttle POST requests to /login by email param
