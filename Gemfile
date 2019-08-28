@@ -12,6 +12,7 @@ gem 'puma', '~> 3.7'
 
 # Middleware
 gem 'rack-attack'
+gem 'sitemap_generator'
 
 # DB
 gem 'pg'
@@ -31,7 +32,6 @@ gem 'turbolinks', '~> 5'
 gem 'jquery-rails'
 gem 'jquery-minicolors-rails'
 gem 'katex'
-
 
 group :development do
   gem 'capistrano'
