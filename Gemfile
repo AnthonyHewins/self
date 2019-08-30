@@ -12,7 +12,6 @@ gem 'puma', '~> 3.7'
 
 # Middleware
 gem 'rack-attack'
-gem 'sitemap_generator'
 
 # DB
 gem 'pg'
@@ -49,6 +48,10 @@ group :test do
   gem 'shoulda-matchers'
   gem 'capybara', '~> 2.13'
   gem 'rails-controller-testing'
+end
+
+group :production do
+  gem 'sitemap_generator'
 end
 
 group :development, :test do
