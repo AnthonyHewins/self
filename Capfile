@@ -37,4 +37,17 @@ install_plugin Capistrano::SCM::Git
 # require "capistrano/passenger"
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
-Dir.glob("lib/capistrano/tasks/*.rake").each { |r| import r }
+Dir.glob("capistrano/*.rake").each { |r| import r }
+
+namespace :passenger do
+  desc "Run Passenger tasks to release new version" 
+  task :release do
+    on roles(:web) do
+      within "#{current_path}" do
+        with rails_env: "production" do
+          execute "bash deploy.sh"
+        end
+      end
+    end
+  end
+end
