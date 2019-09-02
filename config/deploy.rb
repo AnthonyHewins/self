@@ -5,5 +5,3 @@ set :application, "sudobangbang"
 set :repo_url, "git@github.com:AnthonyHewins/self.git"
 set :deploy_to, "~/var/www/sudobangbang"
 append :linked_dirs, "storage"
-
-after 'deploy:published', 'sitemap:refresh'

@@ -30,7 +30,6 @@ gem 'semantic-ui-sass'
 gem 'turbolinks', '~> 5'
 gem 'jquery-rails'
 gem 'jquery-minicolors-rails'
-gem 'katex'
 
 group :development do
   gem 'capistrano'
