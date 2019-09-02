@@ -1,5 +1,4 @@
 require 'articles_tag'
-require 'katex_parser'
 require 'concerns/articles_validation'
 
 class Article < PermissionModel
@@ -7,8 +6,6 @@ class Article < PermissionModel
   include ArticlesValidation
 
   alias_method :owner, :author
-
-  before_save KatexParser.new(html: %i[body], no_html: %i[tldr title])
 
   def self.search(q=nil, tags: nil, author: nil)
     query = search_by_tags tags

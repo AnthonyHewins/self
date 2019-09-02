@@ -5,7 +5,7 @@
   </div>
 
   <div class="content">
-    <%= link_to article.get_title, article, class: "header" %>
+    <%= link_to article.title, article, class: "header" %>
 
     <div class="meta">
       <%= author_label article %>
@@ -13,7 +13,7 @@
     </div>
 
     <div class="description">
-      <%= article.get_tldr %>
+      <%= article.tldr %>
     </div>
 
     <div class="extra">
@@ -21,3 +21,5 @@
     </div>
   </div>
 </div>
+
+<%= javascript_include_tag 'import_katex_readonly' %>

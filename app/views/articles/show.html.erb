@@ -1,4 +1,4 @@
-<%= content_tag :h1, @article.get_title %>
+<%= content_tag :h1, @article.title %>
 
 <%= content_tag :div, author_label(@article), class: "field" %>
 
@@ -36,7 +36,7 @@
   </div>
 <% end %>
 
-<% tldr = @article.get_tldr %>
+<% tldr = @article.tldr %>
 <% tldr_image = @article.tldr_image.attachment %>
 
 <% unless tldr.nil? && tldr_image.nil? %>
@@ -51,4 +51,6 @@
 
 <%= render 'amazon/tech' %>
 
-<%= @article.get_body %>
+<%= @article.body.html_safe %>
+
+<%= javascript_include_tag "import_katex_readonly" %>

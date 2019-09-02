@@ -4,7 +4,7 @@
              field: :title,
              minlength: ArticleValidator::TITLE_MIN,
              maxlength: ArticleValidator::TITLE_MAX,
-             katex: article.get_title %>
+             katex: article.title %>
 
   <div class="field">
     <%= f.label :tags, "Tags (0 to 5 allowed)", class: "label" %>
@@ -15,7 +15,7 @@
              form: f,
              field: :tldr,
              maxlength: ArticleValidator::TLDR_MAX,
-             katex: article.get_tldr %>
+             katex: article.tldr %>
 
   <div class="field">
     <%= f.label :tldr_image, "Image for TL;DR (not required)" %>
@@ -27,7 +27,7 @@
              wysiwig: true,
              field: :body,
              minlength: ArticleValidator::BODY_MIN,
-             katex: article.get_body %>
+             katex: article.body %>
 
   <div class="field">
     <div class="ui checkbox">
@@ -49,5 +49,5 @@
 
 <%# Prevent the textarea from becoming a JS object to make Specs simpler %>
 <% unless Rails.env.test? %>
-  <%= javascript_include_tag "import_html_renderers" %>
+  <%= javascript_include_tag "import_katex_rw" %>
 <% end %>

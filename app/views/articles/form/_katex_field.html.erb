@@ -6,11 +6,24 @@
 <div class="field" id="<%= field %>-field">
   <%= form.label field %>
   <div class="ui two column grid">
+
     <div class="column">
       <%= form.text_area field, id: field, class: klass, "data-target" => "#katex-output-#{field}" %>
     </div>
+
     <div class="column" id="katex-output-<%= field %>">
-      <%= render 'articles/form/katex_target', text: katex %>
+      Start typing to view what the text should look like when you post the article.
+      <br><br>
+      If you use <strong>$$</strong> as delimiters, you can write LaTeX expressions inline.
+      <br><br>
+      E.g. <i>$$ a^2+b^2=c^2 $$</i> yields the Pythagorean Theorem.
+      <br><br>
+      You can also use <strong>$$$</strong> to write LaTeX in display mode, which is
+      more presentable for complex expressions.
+      <br><br>
+      Tip: when you write LaTeX, make sure you space it out like we did with the Pythagorean
+      theorem above. Search engines will detect it that way and more people will see what you have to
+      say!
     </div>
   </div>
 

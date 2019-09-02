@@ -7,15 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 
-    <%# Google AdSense %>
-    <%# <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> %>
-    <%# <script>   %>
-    <%#  (adsbygoogle = window.adsbygoogle || []).push({ %>
-    <%#      google_ad_client: "ca-pub-4515648062433799", %>
-    <%#      enable_page_level_ads: true %>
-    <%#  });       %>
-    <%# </script>  %>
-
     <%# Highlight JS %>
     <!--
     <link rel="stylesheet" href="/path/to/styles/default.css">
@@ -26,8 +17,9 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/11.2.0/classic/ckeditor.js" crossorigin="anonymous"></script>
 
     <%# Katex %>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.0/dist/katex.min.css" integrity="sha384-BdGj8xC2eZkQaxoQ8nSLefg4AV4/AwB3Fj+8SUSo7pnKP6Eoy18liIKTPn9oBYNG" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.0/dist/katex.min.js" integrity="sha384-JiKN5O8x9Hhs/UE5cT5AAJqieYlOZbGT3CHws/y97o3ty4R7/O5poG9F3JoiOYw1" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.0/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
 
     <%# Font awesome %>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
@@ -35,7 +27,7 @@
 
   <body>
     <%= render 'layouts/navbar' %>
-    <div class="ui container">
+    <div class="ui container" id="main">
       <%= render "layouts/flash" %>
       <%= yield %>
     </div>
